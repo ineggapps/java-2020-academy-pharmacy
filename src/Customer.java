@@ -5,27 +5,29 @@ import java.util.Date;
 public class Customer {
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	CustomerDAO dao = new CustomerDAOImpl();
+	CustomerDTO dto = null;
+	
 	public void enter() {
 		int ch;
 		try {
-			while(true) {
+			while (true) {
 				do {
 					System.out.print("1.마스크구매여부확인 2.구매 3.취소 > ");
-					ch =  Integer.parseInt(br.readLine());					
-				}while(ch<1||ch>3);
-				if(ch==3) {
+					ch = Integer.parseInt(br.readLine());
+				} while (ch < 1 || ch > 3);
+				if (ch == 3) {
 					break;
 				}
-				switch(ch) {
-				case 1://마스크구매여부확인
+				switch (ch) {
+				case 1:// 마스크구매여부확인
 					checkPurchase();
 					break;
-				case 2://구매
+				case 2:// 구매
 					purchase();
 					break;
 				}
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -40,48 +42,55 @@ public class Customer {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void purchase() {
 		int result = 0;
 		try {
-			int ch;
-			CustomerDTO dto = identifyCustomer();
+			int ch, qty;
+			if(dto==null) {				
+				dto = identifyCustomer();
+			}
 			System.out.print("1.마스크 2.손소독제 > ");
 			ch = Integer.parseInt(br.readLine());
-			switch(ch) {
+			System.out.print("수량? ");
+			qty =Integer.parseInt(br.readLine());
+			switch (ch) {
 			case 1:
-				result = dao.insertSale(ch, "2020-04-05", 2, dto.getcNum());
+				result = dao.insertSale(ch, "2020-04-05", qty, dto.getcNum());
 				break;
-			case 2:break;
+			case 2:
+				break;
 			}
-			if(result>=1) {				
+			if (result >= 1) {
 				System.out.println("{{{(>_<)}}} 구매가 완료되었습니다");
-			}else {
+			} else {
 				System.out.println("오류로 인해 구매에 실패하였습니다...");
 			}
 			System.out.println();
+		} catch (NumberFormatException e) {
+			System.out.println("올바른 숫자를 입력하세요\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public CustomerDTO identifyCustomer() {
 		CustomerDTO dto = null;
 		try {
 			String rrn, name;
 			System.out.print("주민번호 ? ");
-			//회원정보가 등록돼 있는지 검색
+			// 회원정보가 등록돼 있는지 검색
 			rrn = br.readLine();
-			if(rrn==null || rrn.length()==0) {
+			if (rrn == null || rrn.length() == 0) {
 				rrn = "011009-3012345";
 			}
 			dto = dao.readCustomer(rrn);
-			if(dto==null) {
-				//회원이 등록되지 않았으면?
+			if (dto == null) {
+				// 회원이 등록되지 않았으면?
 				System.out.print("이름 ? ");
 				name = br.readLine();
-				//서버에 회원정보 등록
-			}else {
+				// 서버에 회원정보 등록
+			} else {
 				name = dto.getcName();
 				System.out.println(name + "님 안녕하세요.");
 			}
