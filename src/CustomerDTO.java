@@ -3,6 +3,22 @@ public class CustomerDTO {
 	private int cNum; 
 	private String cName; 
 	private String rrn;
+	
+	/**
+	 * 
+	 */
+	public CustomerDTO() {
+	}
+	/**
+	 * @param cNum
+	 * @param cName
+	 * @param rrn
+	 */
+	public CustomerDTO(int cNum, String cName, String rrn) {
+		this.cNum = cNum;
+		this.cName = cName;
+		this.rrn = rrn;
+	}
 	public int getcNum() {
 		return cNum;
 	}

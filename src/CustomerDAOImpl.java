@@ -3,12 +3,35 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 import com.util.DBConn;
 
 public class CustomerDAOImpl implements CustomerDAO {
 	Connection conn = DBConn.getConnection();
+
+	@Override
+	public int insertCustomer(CustomerDTO dto) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "INSERT INTO customer(cnum, cname, rrn) VALUES(customer_seq.NEXTVAL, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getcName());
+			pstmt.setString(2, dto.getRrn());
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
 
 	@Override
 	public int insertSale(int pnum, String date, int qty, int cnum) {
@@ -25,7 +48,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 			cstmt.executeUpdate();
 			result = 1;
 		} catch (SQLException e) {
-			//오라클 오류 메시지 파싱
+			// 오라클 오류 메시지 파싱
 			String messages[] = e.getMessage().split(": ");
 			String errorType = messages[0];
 			String errorMessage = messages[1].split("[\\r\\n]+")[0];
