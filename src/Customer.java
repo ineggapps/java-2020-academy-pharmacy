@@ -54,17 +54,17 @@ public class Customer {
 			// 회원등록이 된 경우 함수를 통하여 호출하자
 			int qty = dao.checkPurchaseMask(dto);
 			System.out.println(qty);
-			switch (qty) {
-			case 1:
-			case 2:
+			if (qty > 0) {
 				System.out.println(qty + "개 더 구매가 가능합니다.");
-				break;
-			case -20011:
-				System.out.println("오늘은 구매 대상이 아니십니다.");
-				break;
-			case -20021:
-				System.out.println("이미 이번주에 구매하셨으므로 구매가 불가능합니다.");
-				break;
+			} else {
+				switch (qty) {
+				case -20011:
+					System.out.println("오늘은 구매 대상이 아니십니다.");
+					break;
+				case -20021:
+					System.out.println("이미 이번주에 구매하셨으므로 구매가 불가능합니다.");
+					break;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
