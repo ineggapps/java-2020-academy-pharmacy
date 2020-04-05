@@ -3,11 +3,47 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import com.util.DBConn;
 
+import oracle.jdbc.OracleTypes;
+
 public class CustomerDAOImpl implements CustomerDAO {
 	Connection conn = DBConn.getConnection();
+
+	@Override
+	public int checkPurchaseMask(CustomerDTO dto) {
+		int qty = 0;
+		// 마스크 살 수 있는 개수 조사
+		CallableStatement cstmt = null;
+		String sql = "{CALL checkPurchaseMask(?, ?, ?)}";
+		try {
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, null);
+			cstmt.setString(2, dto.getRrn());
+			cstmt.registerOutParameter(3, OracleTypes.INTEGER);
+			cstmt.executeUpdate();
+			qty = cstmt.getInt(3);
+		} catch (SQLException e) {
+			// 오라클 오류 메시지 파싱
+			String messages[] = e.getMessage().split(": ");
+			String errorType = messages[0];
+//			String errorMessage = messages[1].split("[\\r\\n]+")[0];
+//			System.out.println(errorMessage);
+			qty = Integer.parseInt(errorType.split("ORA")[1]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cstmt != null) {
+				try {
+					cstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return qty;
+	}
 
 	@Override
 	public int insertCustomer(CustomerDTO dto) {
