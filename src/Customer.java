@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 
+/**/
 public class Customer {
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	CustomerDAO dao = new CustomerDAOImpl();
@@ -122,8 +123,10 @@ public class Customer {
 					switch (remain) {
 					case -20011:
 						System.out.println("오늘은 구매 대상이 아니십니다.");
+						break;
 					case -20021:
 						System.out.println("이미 이번주에 구매하셨으므로 구매가 불가능합니다.");
+						break;
 					}
 				}
 				System.out.println(qty + "개 주문하셨죠? 잠시만요!");

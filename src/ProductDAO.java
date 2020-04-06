@@ -6,7 +6,8 @@ import java.util.Map;
 public interface ProductDAO {
 	public int insertProduct(ProductDTO dto); //제품추가-입고등록
 	public int updateProduct(ProductDTO dto); //제품수정-제품수정
-	public int deleteProduct(ProductDTO dto); //제품삭제-제품삭제
+	//public int deleteProduct(ProductDTO dto); //제품삭제-제품삭제
+	public int deleteProduct(int pnum); //제품삭제 시 , 이름을 기준?
 	public List<ProductDTO> listStock();//남은재고안내
 	
 	
@@ -18,6 +19,7 @@ public interface ProductDAO {
 	
 	//처방
 	//진단기능
-	//제품삭제.
+	//제품삭제. - 한개 
+
 	
 }
