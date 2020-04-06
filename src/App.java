@@ -4,6 +4,7 @@ public class App {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		Customer customer = new Customer();
+		Pharmacist pharmacist = new Pharmacist();
 		try {
 			int ch;
 			while (true) {
@@ -17,11 +18,11 @@ public class App {
 				switch (ch) {
 				case 1:
 					// ¼Õ´Ô
-					customer.enter();
+					customer.customer();
 					break;
 				case 2:
 					// ¾à»ç
-					
+					pharmacist.pharmacistManage();
 					break;
 				}
 			}

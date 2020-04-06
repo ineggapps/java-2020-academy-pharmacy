@@ -146,4 +146,84 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return dto;
 	}
 
+	/////////////
+	public CustomerDTO checkAvailability(String rrn) {
+		CustomerDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		sql = "SELECT DECODE(MOD(SUBSTR(?,2,1),5),1,'월요일',2,'화요일',3,'수요일',4,'목요일',0,'금요일') rrn";
+		sql += " FROM dual";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, rrn);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				dto = new CustomerDTO();
+				dto.setRrn(rs.getString("rrn"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		return dto;
+
+	}
+
+	public String checkDate() {
+		String result = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "SELECT TO_CHAR(SYSDATE, 'DAY') day  FROM dual";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = rs.getString("day");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		return result;
+
+	}
+
+	public int buyProduct(CustomerDTO dto) {
+		int result = 0;
+
+		return result;
+
+	}
+
 }
