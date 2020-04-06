@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.util.DBConn;
@@ -70,17 +71,18 @@ public class CustomerDAOImpl implements CustomerDAO {
 	}
 
 	@Override
-	public int insertSale(int pnum, String date, int qty, int cnum) {
+	public int insertSale(CustomerDTO dto, int pnum, int qty) {
 		int result = 0;
 		CallableStatement cstmt = null;
 		String sql;
 		try {
-			sql = "{CALL insertSale(?,?,?,?)}";
+			sql = "{CALL insertSale(?,?,?,?,?)}";
 			cstmt = conn.prepareCall(sql);
 			cstmt.setInt(1, pnum);
-			cstmt.setString(2, date);
+			cstmt.setString(2, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 			cstmt.setInt(3, qty);
-			cstmt.setInt(4, cnum);
+			cstmt.setString(4, dto.getRrn());
+			cstmt.setString(5, dto.getcName());
 			cstmt.executeUpdate();
 			result = 1;
 		} catch (SQLException e) {
@@ -89,6 +91,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 			String errorType = messages[0];
 			String errorMessage = messages[1].split("[\\r\\n]+")[0];
 			System.out.println(errorType + ":" + errorMessage);
+			System.out.println();
+			System.out.println(e.getMessage());
+//			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
