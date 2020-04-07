@@ -28,6 +28,12 @@ CREATE TABLE sale(
 FOREIGN KEY(pNum) REFERENCES product(pNum)	
 );
 
+CREATE TABLE product_keyword(
+    pnum NUMBER,
+    keyword VARCHAR(30) NOT NULL,
+    CONSTRAINT PK_PRODUCT_KEYWORD PRIMARY KEY (pnum, keyword) 
+);
+
 -------------------------------------------------
 
 SELECT id, name, birth, tel
@@ -132,7 +138,6 @@ create sequence product_seq
 --
         
 --
-
 desc product;
 --이름    널?       유형           
 ------- -------- ------------ 
@@ -148,6 +153,8 @@ desc sale;
 --SDATE          DATE   
 --SQTY  NOT NULL NUMBER 
 --CNUM  NOT NULL NUMBER 
+
+alter table sale modify cnum null;
 
 desc input;
 --이름    널?       유형        

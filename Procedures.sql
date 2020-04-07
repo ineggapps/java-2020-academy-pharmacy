@@ -311,8 +311,19 @@ commit;
 select * from tab;
 
 desc product;
-insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '마스크', 1500, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '마스크 (KF94)', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '손소독제', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '타이레놀', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '게보린', 1500, 0);
 commit;
+
+select * from product;
+select * from product_keyword;
+insert into product_keyword(pnum, keyword) values(2,'위생');
+insert into product_keyword(pnum, keyword) values(3,'두통');
+insert into product_keyword(pnum, keyword) values(4,'두통');
+commit;
+
+select p.pnum, pname, price, stock from product p
+JOIN product_keyword k ON k.pnum = p.pnum
+WHERE keyword='두통';

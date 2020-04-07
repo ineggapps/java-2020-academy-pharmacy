@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE insertSale(
+CREATE OR REPLACE PROCEDURE insertSaleForMask(
     productNum sale.pnum%TYPE,
     pDate sale.sdate%TYPE,
     pQTY sale.sqty%TYPE,
@@ -25,11 +25,12 @@ BEGIN
     IF pQTY > 2 THEN --2매 이상 구매를 요청했는지 확인하기
         raise_application_error(-20031,'일주일에 인당 2매까지만 구매가 가능합니다. ');
     END IF;
+    SELECT stock INTO stock FROM product
+    WHERE pnum=productNum;
+-- raise_application_error(-20031,stock || '<-재고개수');
     IF stock-pQTY < 0 THEN -- 재고가 있는지 확인
         raise_application_error(-20041,'재고가 부족하여 판매할 수 없습니다. ' || '(현재 재고: ' || stock || '개, 구매수량: ' || pQTY || '개)');
     END IF;
-    SELECT stock INTO stock FROM product
-    WHERE pnum=productNum;
     --TODO: 마스크5부제에 의하여 오늘이 구매일이 맞는지 확인
     SELECT to_char(pDate, 'd')-1 INTO today FROM dual; --오늘의 요일 날짜함수가 (1:일요일~7:토요일)라면 결괏값은 (0:일요일, 1:월요일, 5:금요일, 6:토요일)
     group_a := today; --1~5년생 구하기
@@ -71,6 +72,31 @@ BEGIN
     COMMIT;
 END;
 /
+
+CREATE OR REPLACE PROCEDURE insertSaleItem(
+    pNum sale.pnum%TYPE,
+    pQTY sale.sqty%TYPE
+)
+IS
+    stock NUMBER;
+BEGIN
+    --재고가 있는지 확인하기
+    SELECT stock INTO stock FROM product WHERE pnum=pNum and rownum=1;
+--    raise_application_error(-20041,'디버그(⊙x⊙;) ' || stock || pnum );
+-- raise_application_error(-20031,stock || '<-재고개수');
+    IF stock-pQTY < 0 THEN -- 재고가 있는지 확인
+        raise_application_error(-20041,'재고가 부족하여 판매할 수 없습니다. (⊙x⊙;) ' || '(현재 재고: ' || stock || '개, 구매수량: ' || pQTY || '개)');
+    END IF;
+    --구매
+    INSERT INTO sale(snum, pnum, sdate, sqty)
+    VALUES (sale_seq.NEXTVAL,pNum, SYSDATE, pQTY);
+    COMMIT;
+END;
+/
+
+select * from sale;
+select * from product;
+SELECT stock FROM product where pnum=2;
 
 --검산
 SELECT * FROM sale JOIN customer ON sale.cnum = customer.cnum;

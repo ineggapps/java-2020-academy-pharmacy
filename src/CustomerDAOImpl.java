@@ -76,7 +76,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 		CallableStatement cstmt = null;
 		String sql;
 		try {
-			sql = "{CALL insertSale(?,?,?,?,?)}";
+			sql = "{CALL insertSaleForMask(?,?,?,?,?)}";
 			cstmt = conn.prepareCall(sql);
 			cstmt.setInt(1, pnum);
 			cstmt.setString(2, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));

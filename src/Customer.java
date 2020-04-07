@@ -69,11 +69,6 @@ public class Customer {
 					if (ch == 2) {
 						break;
 					}
-					switch (ch) {
-					case 1:
-						System.out.println("구매 소스코드 입력");
-						break;
-					}
 				}
 			}
 		} catch (Exception e) {
@@ -118,7 +113,7 @@ public class Customer {
 				int remain = 0; // 살 수 있는 마스크 개수
 				remain = checkPurchase();
 				if (remain > 0) {
-					System.out.println(dto.getcName() + "님은 이번주에 " + remain + "개 구매가 가능합니다.");
+					System.out.println(dto.getcName() + "님은 이번주에 " + remain + "개까지 구매가 가능합니다.");
 				} else {
 					switch (remain) {
 					case -20011:
