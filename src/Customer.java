@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Calendar;
+import java.util.List;
 
 /**/
 public class Customer {
@@ -93,6 +94,7 @@ public class Customer {
 
 	public void purchase() {
 		int result = 0;
+		List<Integer> pnums = null;
 		try {
 			int ch, qty;
 			System.out.print("1.마스크 2.손소독제 > ");
@@ -125,9 +127,12 @@ public class Customer {
 					}
 				}
 				System.out.println(qty + "개 주문하셨죠? 잠시만요!");
-				result = dao.insertSale(dto, ch, qty);
+				pnums = dao.getMaskProductNumbers("마스크", true);
+				result = dao.insertSale(dto, pnums.get((int) (Math.random() * pnums.size())), qty);
 				break;
 			case 2:
+				pnums = dao.getMaskProductNumbers("손소독제", true);
+				result = dao.insertSale(dto, pnums.get((int) (Math.random() * pnums.size())), qty);
 				break;
 			}
 			if (result >= 1) {

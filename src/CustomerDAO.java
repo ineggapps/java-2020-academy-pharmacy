@@ -1,3 +1,4 @@
+import java.util.List;
 
 public interface CustomerDAO {
 	public int checkPurchaseMask(CustomerDTO dto);
@@ -7,4 +8,7 @@ public interface CustomerDAO {
 	public CustomerDTO checkAvailability(String rrn);
 	public CustomerDTO readCustomer(String rrn);
 	public String checkDate();
+	
+	//
+	public List<Integer> getMaskProductNumbers(String keyword, boolean isAvailable);
 }
