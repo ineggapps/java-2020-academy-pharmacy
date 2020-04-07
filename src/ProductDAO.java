@@ -15,10 +15,18 @@ public interface ProductDAO {
 	public List<SaleSumDTO> listProduct(); //총 판매리스트
 	
 	//처방
-	public List<ProductDTO> searchKeyword(String keywrod); //처방
+	public List<ProductDTO> searchKeyword(String keyword); //처방검색
 	public int insertSale(int pnum, int qty);
+	//증상 목록
+	public List<String> getKeywords(); //증상 키워드만 출력 (중복제거)
+	public List<ProductKeywordDTO> listByKeyword(String keyword); //증상 목록들 출력
+	public int insertKeyword(int pnum, String keyword);
+	public int deleteKeywordProduct(int pnum, String keyword)
+	//증상 추가
+	
+	//증상 변경
 
-	//진단기능
+	//증상 삭제
 	//제품삭제.
 	
 }

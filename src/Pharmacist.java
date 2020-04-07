@@ -253,6 +253,32 @@ public class Pharmacist {
 //처방
 
 	public void prescription() {
+		int ch;
+		try {
+			while (true) {
+				do {
+					System.out.print("1.처방하기 2.처방관리 3.뒤로가기 > ");
+					ch = sc.nextInt();
+				} while (ch < 1 || ch > 3);
+				switch (ch) {
+				case 1:
+					prescribe();
+					break;
+				case 2:
+					managePrescription();
+					break;
+				}
+				if (ch == 3) {
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void prescribe() {
 		int result; // 쿼리 처리결과
 		int choice, qty; // 선택번호, 수량
 		String keyword; // 검색어
@@ -291,4 +317,87 @@ public class Pharmacist {
 
 	}
 
+	public void managePrescription() {
+		int ch;
+		int result;
+		String keyword;
+		int pnum;
+		System.out.print("1.증상목록 2.증상추가 3.증상삭제 4.뒤로가기> ");
+		ch = sc.nextInt();
+		if (ch == 4) {
+			return;
+		} else if (ch < 1 || ch > 4) {
+			System.out.println("올바른 번호를 입력해 주세요...");
+			return;
+		}
+		List<String> keywords = dao.getKeywords();
+		List<ProductKeywordDTO> list = null;
+		printSymtoms(keywords);
+		switch (ch) {
+		case 1:// 증상 목록
+			if (keywords == null || keywords.size() == 0) {
+				System.out.println("등록된 증상 목록이 없습니다. 증상 추가를 이용하여 등록해 주세요...");
+				return;
+			}
+			System.out.println("등록된 증상 목록은 다음과 같습니다...");
+			break;
+		case 2:// 증상 추가
+			System.out.println("기존에 등록된 증상 항목은 다음과 같습니다. ");
+			System.out.print("추가할 증상(주관식) ? ");
+			keyword = sc.next();
+			printProducts(dao.listStock());
+			System.out.print("추가할 상품번호 ? ");
+			pnum = sc.nextInt();
+			result  = dao.insertKeyword(pnum, keyword);
+			if(result != 0 ) {
+				System.out.println("증상이 정상적으로 등록되었습니다.");
+			}else {
+				System.out.println("이미 등록되었습니다만...?");
+			}
+			break;
+		case 3:// 증상 삭제
+			System.out.print("삭제할 증상? ");
+			keyword = sc.next();
+			list =dao.listByKeyword(keyword);
+			printSymtomObjects(list);
+			System.out.print("삭제할 상품번호 ? ");
+			pnum = sc.nextInt();
+			result = dao.deleteKeywordProduct(pnum, keyword);
+			if(result!=0) {
+				System.out.println("증상이 성공적으로 삭제되었습니다.");
+			}
+			
+			break;
+		}
+	}
+
+	public void printSymtoms(List<String> keywords) {
+		if (keywords == null || keywords.size() == 0) {
+			return;
+		}
+		int index = 0;
+		for (String k : keywords) {
+			System.out.println(++index + ". " + k);
+		}
+	}
+
+	public void printSymtomObjects(List<ProductKeywordDTO> list) {
+		if (list == null || list.size() == 0) {
+			return;
+		}
+
+		for (ProductKeywordDTO dto : list) {
+			System.out.println(dto);
+		}
+	}
+
+	public void printProducts(List<ProductDTO> list) {
+		if (list == null || list.size() == 0) {
+			return;
+		}
+		for (ProductDTO dto : list) {
+			System.out.println(dto);
+		}
+
+	}
 }

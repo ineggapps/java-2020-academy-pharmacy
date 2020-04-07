@@ -306,4 +306,127 @@ public class ProductDAOImpl implements ProductDAO {
 		return result;
 	}
 
+	@Override
+	public List<String> getKeywords() {
+		List<String> list = new ArrayList<String>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "SELECT DISTINCT keyword from product_keyword";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(rs.getString("keyword"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<ProductKeywordDTO> listByKeyword(String keyword) {
+		List<ProductKeywordDTO> list = new ArrayList<ProductKeywordDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "select keyword, p.pnum, pname, price, stock from product_keyword k" + " "
+					+ "JOIN product p ON k.pnum = p.pnum" + " " + "WHERE keyword=? ORDER BY keyword, stock desc";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductKeywordDTO dto = new ProductKeywordDTO();
+				dto.setKeyword(rs.getNString("keyword"));
+				ProductDTO product = new ProductDTO();
+				product.setPnum(rs.getInt("pnum"));
+				product.setPname(rs.getString("pname"));
+				product.setPrice(rs.getInt("price"));
+				product.setStock(rs.getInt("stock"));
+				dto.setProduct(product);
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public int insertKeyword(int pnum, String keyword) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "INSERT INTO product_keyword (pnum, keyword) VALUES(?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pnum);
+			pstmt.setString(2, keyword);
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteKeywordProduct(int pnum, String keyword) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "DELETE FROM product_keyword WHERE pnum=? and keyword=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pnum);
+			pstmt.setString(2, keyword);
+			pstmt.executeUpdate();
+			result = 1;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+
 }
