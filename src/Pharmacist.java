@@ -26,14 +26,34 @@ public class Pharmacist {
 	public void pharmacistManage() {
 		int ch;
 		while (true) {
-			System.out.println("\n 약사");
+			System.out.println("\n 약사 [관리자 모드]");
+			String id;
+			String pwd;
+			if (!loggedIn) {
+				do {
+					System.out.println("BUT.... 로그인이 필요합니다.");
+					System.out.print("아이디:");
+					id = sc.next();
+					System.out.print("비밀번호:");
+					pwd = sc.next();
+					if (id.equals(administrator.get(KEY_ID)) && pwd.equals(administrator.get(KEY_PW))) {
+						System.out.println("관리자로 로그인하였습니다.");
+						loggedIn = true;
+					} else {
+						System.out.println("아이디나 비밀번호가 일치하지 않습니다.");
+					}
+				} while (!loggedIn);// 로그인이 되지 않은 경우에 계속 순회
+			}
+
 			do {
 				System.out.println("1.재고관리  2. 판매현황  3.처방   4.로그아웃 =>");
 				ch = sc.nextInt();
 			} while (ch < 1 || ch > 4);
 
-			if (ch == 4)
+			if (ch == 4) {
+				loggedIn = false;
 				break;
+			}
 
 			switch (ch) {
 			case 1:
@@ -54,24 +74,6 @@ public class Pharmacist {
 		int ch;
 
 		while (true) {
-			System.out.println("\n 약사 [관리자 모드]");
-			String id;
-			String pwd;
-			if (!loggedIn) {
-				do {
-					System.out.println("BUT.... 로그인이 필요합니다.");
-					System.out.print("아이디:");
-					id = sc.next();
-					System.out.print("비밀번호:");
-					pwd = sc.next();
-					if (id.equals(administrator.get(KEY_ID)) && pwd.equals(administrator.get(KEY_PW))) {
-						System.out.println("관리자로 로그인하였습니다.");
-						loggedIn = true;
-					} else {
-						System.out.println("아이디나 비밀번호가 일치하지 않습니다.");
-					}
-				} while (!loggedIn);//로그인이 되지 않은 경우에 계속 순회
-			}
 
 			do {
 				System.out.println("1.입고등록 2.제품수정 3.제품삭제  4.리스트 5.종료=>");
@@ -256,13 +258,17 @@ public class Pharmacist {
 		String keyword; // 검색어
 		List<ProductDTO> list = null;
 		try {
-			System.out.println("\n 증상 입력 >...");
+			System.out.print("\n 증상 입력 > ");
 			keyword = sc.next().trim();
 			if (keyword == null || keyword.length() == 0) {
 				System.out.println("키워드를 입력하세요...");
 				return;
 			}
 			list = dao.searchKeyword(keyword);
+			if (list == null || list.size() == 0) {
+				System.out.println("검색 결과가 없습니다.");
+				return;
+			}
 			for (int i = 0; i < list.size(); i++) {
 				// 관련 상품 출력
 				System.out.println(i + 1 + "번. " + list.get(i).toString());
