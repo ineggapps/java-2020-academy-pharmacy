@@ -1,15 +1,27 @@
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
-
 public class Pharmacist {
+	public static final String KEY_ID = "id";
+	public static final String KEY_PW = "pw";
+	public static final String ADMIN_ID = "admin";
+	public static final String ADMIN_PW = "1234";
 	private Scanner sc = new Scanner(System.in);
 	private ProductDAO dao = new ProductDAOImpl();
+	private boolean loggedIn = false;
+	private Map<String, String> administrator = new HashMap<String, String>();
 	/*
 	 * private PharmacistDAO dao = new PharmacistDAOImpl(); > 궁금한 점. -
 	 * PharmacistDAO를 인터페이스로 생성하고, 그것을 구현한것이 PharmacistDAOImpl인데, - private
 	 * PharmacistDAO dao = new PharmacistDAOImpl(); 이렇게 인스턴스화 가능?
 	 */
+
+	public Pharmacist() {
+		administrator.put(KEY_ID, ADMIN_ID);
+		administrator.put(KEY_PW, ADMIN_PW);
+	}
 
 	public void pharmacistManage() {
 		int ch;
@@ -42,17 +54,24 @@ public class Pharmacist {
 		int ch;
 
 		while (true) {
-			System.out.println("\n 약사 [관리자 로그인]");
-			int pwd;
+			System.out.println("\n 약사 [관리자 모드]");
 			String id;
-			do {
-				System.out.print("아이디:");
-				id = sc.next();
-				System.out.print("비밀번호:");
-				pwd = sc.nextInt();
-				if (pwd != 1234)
-					System.out.println("잘못된 비밀번호입니다.");
-			} while (pwd != 1234);
+			String pwd;
+			if (!loggedIn) {
+				do {
+					System.out.println("BUT.... 로그인이 필요합니다.");
+					System.out.print("아이디:");
+					id = sc.next();
+					System.out.print("비밀번호:");
+					pwd = sc.next();
+					if (id.equals(administrator.get(KEY_ID)) && pwd.equals(administrator.get(KEY_PW))) {
+						System.out.println("관리자로 로그인하였습니다.");
+						loggedIn = true;
+					} else {
+						System.out.println("아이디나 비밀번호가 일치하지 않습니다.");
+					}
+				} while (!loggedIn);//로그인이 되지 않은 경우에 계속 순회
+			}
 
 			do {
 				System.out.println("1.입고등록 2.제품수정 3.제품삭제  4.리스트 5.종료=>");
