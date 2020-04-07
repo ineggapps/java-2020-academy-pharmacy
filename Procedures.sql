@@ -35,7 +35,7 @@ BEGIN
     COMMIT;
 END;
 /
-EXEC insertInputWithoutOut(1,'2020-04-06',35);
+EXEC insertInputWithoutOut(4,'2020-04-06',55);
 
 select * from product;
 select  * from input;
@@ -315,6 +315,13 @@ insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '마스
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '손소독제', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '타이레놀', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '게보린', 1500, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '우루사', 3300, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '타이레놀', 1500, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '노스카나겔', 25000, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '벤트락스겔', 25000, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '더마틱스울트라', 50000, 0);
+select * from product;
+update product set pname='벤트락스겔' where pnum=14;
 commit;
 
 select * from product;
@@ -322,6 +329,10 @@ select * from product_keyword;
 insert into product_keyword(pnum, keyword) values(2,'위생');
 insert into product_keyword(pnum, keyword) values(3,'두통');
 insert into product_keyword(pnum, keyword) values(4,'두통');
+insert into product_keyword(pnum, keyword) values(14,'여드름');
+insert into product_keyword(pnum, keyword) values(15,'여드름');
+insert into product_keyword(pnum, keyword) values(16,'여드름');
+
 commit;
 
 select p.pnum, pname, price, stock from product p
