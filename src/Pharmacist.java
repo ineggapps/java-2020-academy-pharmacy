@@ -73,7 +73,6 @@ public class Pharmacist {
 		}
 	}
 
-
 	public void inventory() {
 		int ch;
 		while (true) {
@@ -109,7 +108,6 @@ public class Pharmacist {
 		}
 	}
 
-
 	// 제품추가
 	public void insert() {
 		System.out.println("\n 제품추가...");
@@ -130,73 +128,71 @@ public class Pharmacist {
 		System.out.println();
 	}
 
-	// 제품수정 
-	 public void update() {
-	  System.out.println("\n 제품수정...");
-	  int pnum;
-	  ProductDTO dto = new ProductDTO();
-	  try {
-	   
-	   System.out.print(" 수정할 품목 번호? ");
-	   pnum=sc.nextInt();
-	   
-	   dto = dao.readProduct(pnum);
-	   
-	   if(dto==null) {
-	    System.out.println("등록된 아이디가 없습니다.\n");
-	    return;
-	   }
-	   
-	   System.out.print(dto.getPnum()+"\t");
-	   System.out.print(dto.getPname()+"\t");
-	   System.out.print(dto.getPrice()+"\t");
-	   System.out.print(dto.getStock()+"\n");
-	   
-	   
-	   System.out.print("품목 명? ");
-	   dto.setPname(sc.next());
-	   System.out.print("판매가 ? ");
-	   dto.setPrice(sc.nextInt());
-	   
-	   int result = dao.updateProduct(dto);
-	   System.out.println(result + "이 수정 완료 되었습니다.");    
-	  } catch (Exception e) {
-	   e.printStackTrace();
-	  }
-	  System.out.println();
-	 }
-	 
-	 public void delete() {
-	  System.out.println("\n제품 삭제...");
-	  int pnum;
-	  ProductDTO dto = new ProductDTO();
-	  
-	  try {
-	   
-	 
-	   System.out.print("삭제할 제품번호?");
-	   pnum=sc.nextInt();
-	   
-	   dto = dao.readProduct(pnum);
-	   
-	   if(dto==null) {
-	    System.out.println("등록된 제품이 없습니다.\n");
-	    return;
-	   }
-	   
-	   System.out.print(dto.getPnum()+"\t");
-	   System.out.print(dto.getPname()+"\t");
-	   System.out.print(dto.getPrice()+"\t");
-	   System.out.print(dto.getStock()+"\n");
-	   
-	   int result=dao.deleteProduct(pnum);
-	   
-	   if (result!=0)
-	    System.out.println("제품삭제 성공....");
-	  } catch (Exception e) {
-	  }
-	  
-	 }
+	// 제품수정
+	public void update() {
+		System.out.println("\n 제품수정...");
+		int pnum;
+		ProductDTO dto = new ProductDTO();
+		try {
+
+			System.out.print(" 수정할 품목 번호? ");
+			pnum = sc.nextInt();
+
+			dto = dao.readProduct(pnum);
+
+			if (dto == null) {
+				System.out.println("등록된 아이디가 없습니다.\n");
+				return;
+			}
+
+			System.out.print(dto.getPnum() + "\t");
+			System.out.print(dto.getPname() + "\t");
+			System.out.print(dto.getPrice() + "\t");
+			System.out.print(dto.getStock() + "\n");
+
+			System.out.print("품목 명? ");
+			dto.setPname(sc.next());
+			System.out.print("판매가 ? ");
+			dto.setPrice(sc.nextInt());
+
+			int result = dao.updateProduct(dto);
+			System.out.println(result + "이 수정 완료 되었습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
+	}
+
+	public void delete() {
+		System.out.println("\n제품 삭제...");
+		int pnum;
+		ProductDTO dto = new ProductDTO();
+
+		try {
+
+			System.out.print("삭제할 제품번호?");
+			pnum = sc.nextInt();
+
+			dto = dao.readProduct(pnum);
+
+			if (dto == null) {
+				System.out.println("등록된 제품이 없습니다.\n");
+				return;
+			}
+
+			System.out.print(dto.getPnum() + "\t");
+			System.out.print(dto.getPname() + "\t");
+			System.out.print(dto.getPrice() + "\t");
+			System.out.print(dto.getStock() + "\n");
+
+			int result = dao.deleteProduct(pnum);
+
+			if (result != 0)
+				System.out.println("제품삭제 성공....");
+		} catch (Exception e) {
+		}
+
+	}
 
 //입고	
 	public void input() {
@@ -294,6 +290,7 @@ public class Pharmacist {
 			e.printStackTrace();
 		}
 	}
+
 	// 재고리스트
 	public void liststock() {
 		System.out.println("물품 재고 리스트");
@@ -342,7 +339,7 @@ public class Pharmacist {
 			month = Integer.parseInt(rrn.substring(2, 4));
 			day = Integer.parseInt(rrn.substring(4, 6));
 			if (month < 1 || month > 12) {
-				System.out.println("월 입력오류 : " + month+"월 로 입력했습니다.");
+				System.out.println("월 입력오류 : " + month + "월 로 입력했습니다.");
 				return false;
 			}
 			Calendar cal = Calendar.getInstance();
@@ -358,7 +355,7 @@ public class Pharmacist {
 		}
 		return true;
 	}
-	
+
 // 손님별 마스크판매리스트
 	public void customerlist() {
 		System.out.println("\n손님별 마스크 판매리스트...");
@@ -367,13 +364,12 @@ public class Pharmacist {
 		while (true) {
 			System.out.println("검색할 손님 주민등록번호(전 메뉴로 돌아가기 : n)?");
 			rrn = sc.next();
-			if(rrn.equalsIgnoreCase("n")) {  //주민번호 유효성검사 메소드 호출
+			if (rrn.equalsIgnoreCase("n")) { // 주민번호 유효성검사 메소드 호출
 				return;
 			}
-			if (isValidRRN(rrn)==false) {
+			if (isValidRRN(rrn) == false) {
 				System.out.println("다시 입력해주세요^^");
-			}
-			else{
+			} else {
 				break;
 			}
 		}
@@ -409,6 +405,7 @@ public class Pharmacist {
 		try {
 			while (true) {
 				do {
+					System.out.print("1.처방하기 2.처방관리 3.뒤로가기 > ");
 					ch = sc.nextInt();
 				} while (ch < 1 || ch > 3);
 				switch (ch) {
