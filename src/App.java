@@ -4,7 +4,7 @@ public class App {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		Customer customer = new Customer();
-		Pharmacist pharmacist = new Pharmacist();
+		Pharmacist pharmacist = new Pharmacist(); //¤¾¤·
 		try {
 			int ch;
 			while (true) {
