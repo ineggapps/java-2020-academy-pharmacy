@@ -500,8 +500,8 @@ public class ProductDAOImpl implements ProductDAO {
 		return result;
 	}
 
-	private static final String ERROR_START = "ORA-";
-	private static final String ERROR_END = ": ";
+//	private static final String ERROR_START = "ORA-";
+//	private static final String ERROR_END = ": ";
 
 	@Override
 	public List<ProductDTO> listProduct() {
