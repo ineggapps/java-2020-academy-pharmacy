@@ -14,9 +14,9 @@ public class Pharmacist {
 	private boolean loggedIn = false;
 	private Map<String, String> administrator = new HashMap<String, String>();
 	/*
-	 * private PharmacistDAO dao = new PharmacistDAOImpl(); > ±Ã±İÇÑ Á¡. -
-	 * PharmacistDAO¸¦ ÀÎÅÍÆäÀÌ½º·Î »ı¼ºÇÏ°í, ±×°ÍÀ» ±¸ÇöÇÑ°ÍÀÌ PharmacistDAOImplÀÎµ¥, - private
-	 * PharmacistDAO dao = new PharmacistDAOImpl(); ÀÌ·¸°Ô ÀÎ½ºÅÏ½ºÈ­ °¡´É?
+	 * private PharmacistDAO dao = new PharmacistDAOImpl(); > ê¶ê¸ˆí•œ ì . -
+	 * PharmacistDAOë¥¼ ì¸í„°í˜ì´ìŠ¤ë¡œ ìƒì„±í•˜ê³ , ê·¸ê²ƒì„ êµ¬í˜„í•œê²ƒì´ PharmacistDAOImplì¸ë°, - private
+	 * PharmacistDAO dao = new PharmacistDAOImpl(); ì´ë ‡ê²Œ ì¸ìŠ¤í„´ìŠ¤í™” ê°€ëŠ¥?
 	 */
 
 	public Pharmacist() {
@@ -28,27 +28,27 @@ public class Pharmacist {
 		int ch;
 		try {
 			while (true) {
-				System.out.println("\n ¾à»ç [°ü¸®ÀÚ ¸ğµå]");
+				System.out.println("\n ì•½ì‚¬ [ê´€ë¦¬ì ëª¨ë“œ]");
 				String id;
 				String pwd;
 				if (!loggedIn) {
 					do {
-						System.out.println("BUT.... ·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù.");
-						System.out.print("¾ÆÀÌµğ:");
+						System.out.println("BUT.... ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤.");
+						System.out.print("ì•„ì´ë””:");
 						id = sc.next();
-						System.out.print("ºñ¹Ğ¹øÈ£:");
+						System.out.print("ë¹„ë°€ë²ˆí˜¸:");
 						pwd = sc.next();
 						if (id.equals(administrator.get(KEY_ID)) && pwd.equals(administrator.get(KEY_PW))) {
-							System.out.println("°ü¸®ÀÚ·Î ·Î±×ÀÎÇÏ¿´½À´Ï´Ù.");
+							System.out.println("ê´€ë¦¬ìë¡œ ë¡œê·¸ì¸í•˜ì˜€ìŠµë‹ˆë‹¤.");
 							loggedIn = true;
 						} else {
-							System.out.println("¾ÆÀÌµğ³ª ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.");
+							System.out.println("ì•„ì´ë””ë‚˜ ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 							return;
 						}
-					} while (!loggedIn);// ·Î±×ÀÎÀÌ µÇÁö ¾ÊÀº °æ¿ì¿¡ °è¼Ó ¼øÈ¸
+					} while (!loggedIn);// ë¡œê·¸ì¸ì´ ë˜ì§€ ì•Šì€ ê²½ìš°ì— ê³„ì† ìˆœíšŒ
 				}
 				do {
-					System.out.print("1.Àç°í°ü¸®  2. ÆÇ¸ÅÇöÈ²  3.Ã³¹æ   4.·Î±×¾Æ¿ô =>");
+					System.out.print("1.ì¬ê³ ê´€ë¦¬  2. íŒë§¤í˜„í™©  3.ì²˜ë°©   4.ë¡œê·¸ì•„ì›ƒ =>");
 					ch = sc.nextInt();
 				} while (ch < 1 || ch > 4);
 				if (ch == 4) {
@@ -76,17 +76,13 @@ public class Pharmacist {
 
 	public void inventory() {
 		int ch;
-
 		while (true) {
-
 			do {
-				System.out.print("1.ÀÔ°íµî·Ï 2.Á¦Ç°¼öÁ¤ 3.Á¦Ç°»èÁ¦  4.Àç°í¸®½ºÆ® 5.Á¾·á=>");
+				System.out.println("1.ì œí’ˆì¶”ê°€ 2.ì œí’ˆìˆ˜ì • 3.ì œí’ˆì‚­ì œ 4.ì…ê³ ë“±ë¡ 5.ì…ê³ ìˆ˜ì • 6.ì…ê³ ì‚­ì œ 7.ë¦¬ìŠ¤íŠ¸ 8.ì¢…ë£Œ=>");
 				ch = sc.nextInt();
-			} while (ch < 1 || ch > 5);
-
-			if (ch == 5)
+			} while (ch < 1 || ch > 8);
+			if (ch == 8)
 				break;
-
 			switch (ch) {
 			case 1:
 				insert();
@@ -98,32 +94,127 @@ public class Pharmacist {
 				delete();
 				break;
 			case 4:
+				input();
+				break;
+			case 5:
+				updateInput();
+				break;
+			case 6:
+				deleteInput();
+				break;
+			case 7:
 				liststock();
 				break;
-
 			}
-
 		}
 	}
 
-//ÀÔ°í	
+	// ì œí’ˆì¶”ê°€
 	public void insert() {
-		System.out.println("\n [ÀÔ°í µî·Ï]"); // ¸¶½ºÅ©¿Í ¼Õ¼Òµ¶Á¦ ÀÔ°í µî·Ï
+		System.out.println("\n ì œí’ˆì¶”ê°€...");
+		ProductDTO dto = new ProductDTO();
+		try {
+			System.out.print("í’ˆëª© ë²ˆí˜¸? ");
+			dto.setPnum(sc.nextInt());
+			System.out.print("í’ˆëª© ëª…? ");
+			dto.setPname(sc.next());
+			System.out.print("íŒë§¤ê°€ ? ");
+			dto.setPrice(sc.nextInt());
+
+			int result = dao.insertProduct(dto);
+			System.out.println(result + "ì´ ë“±ë¡ì´ ì™„ë£Œ ë˜ì—ˆìŠµë‹ˆë‹¤.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
+	}
+
+	// ì œí’ˆìˆ˜ì • 
+	 public void update() {
+	  System.out.println("\n ì œí’ˆìˆ˜ì •...");
+	  int pnum;
+	  ProductDTO dto = new ProductDTO();
+	  try {
+	   
+	   System.out.print(" ìˆ˜ì •í•  í’ˆëª© ë²ˆí˜¸? ");
+	   pnum=sc.nextInt();
+	   
+	   dto = dao.readProduct(pnum);
+	   
+	   if(dto==null) {
+	    System.out.println("ë“±ë¡ëœ ì•„ì´ë””ê°€ ì—†ìŠµë‹ˆë‹¤.\n");
+	    return;
+	   }
+	   
+	   System.out.print(dto.getPnum()+"\t");
+	   System.out.print(dto.getPname()+"\t");
+	   System.out.print(dto.getPrice()+"\t");
+	   System.out.print(dto.getStock()+"\n");
+	   
+	   
+	   System.out.print("í’ˆëª© ëª…? ");
+	   dto.setPname(sc.next());
+	   System.out.print("íŒë§¤ê°€ ? ");
+	   dto.setPrice(sc.nextInt());
+	   
+	   int result = dao.updateProduct(dto);
+	   System.out.println(result + "ì´ ìˆ˜ì • ì™„ë£Œ ë˜ì—ˆìŠµë‹ˆë‹¤.");    
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  }
+	  System.out.println();
+	 }
+	 
+	 public void delete() {
+	  System.out.println("\nì œí’ˆ ì‚­ì œ...");
+	  int pnum;
+	  ProductDTO dto = new ProductDTO();
+	  
+	  try {
+	   
+	 
+	   System.out.print("ì‚­ì œí•  ì œí’ˆë²ˆí˜¸?");
+	   pnum=sc.nextInt();
+	   
+	   dto = dao.readProduct(pnum);
+	   
+	   if(dto==null) {
+	    System.out.println("ë“±ë¡ëœ ì œí’ˆì´ ì—†ìŠµë‹ˆë‹¤.\n");
+	    return;
+	   }
+	   
+	   System.out.print(dto.getPnum()+"\t");
+	   System.out.print(dto.getPname()+"\t");
+	   System.out.print(dto.getPrice()+"\t");
+	   System.out.print(dto.getStock()+"\n");
+	   
+	   int result=dao.deleteProduct(pnum);
+	   
+	   if (result!=0)
+	    System.out.println("ì œí’ˆì‚­ì œ ì„±ê³µ....");
+	  } catch (Exception e) {
+	  }
+	  
+	 }
+
+//ì…ê³ 
+	public void insert() {
+		System.out.println("\n [ì…ê³  ë“±ë¡]"); // ë§ˆìŠ¤í¬ì™€ ì†ì†Œë…ì œ ì…ê³  ë“±ë¡
 
 		InputDTO dto = new InputDTO();
 		try {
 			printProducts(dao.listProduct());
-			System.out.print("¹°Ç° ¹øÈ£? ");
+			System.out.print("ë¬¼í’ˆ ë²ˆí˜¸? ");
 			dto.setPnum(sc.nextInt());
-			System.out.print("ÀÔ°í ³¯Â¥? ");
+			System.out.print("ì…ê³  ë‚ ì§œ? ");
 			dto.setIdate(sc.next());
-			System.out.println("°³¼ö ? ");
+			System.out.println("ê°œìˆ˜ ? ");
 			dto.setIqty(sc.nextInt());
 
-			int result = dao.insertProduct(dto);
+			int result = dao.insertInput(dto);
 			if (result != 0)
 				;
-			System.out.println("ÀÔ°í¹øÈ£ " + result + "ÀÌ µî·ÏÀÌ ¿Ï·á µÇ¾ú½À´Ï´Ù.");
+			System.out.println("ì…ê³ ë²ˆí˜¸ " + result + "ì´ ë“±ë¡ì´ ì™„ë£Œ ë˜ì—ˆìŠµë‹ˆë‹¤.");
 			pharmacistManage();
 
 		} catch (Exception e) {
@@ -134,90 +225,89 @@ public class Pharmacist {
 
 	}
 
-	// ¹°Ç°¼öÁ¤
+	// ë¬¼í’ˆìˆ˜ì •
 	public void update() {
-		System.out.println("[¹°Ç° ¼öÁ¤]");
+		System.out.println("[ë¬¼í’ˆ ìˆ˜ì •]");
 		List<InputListDTO> list = dao.listStock();
 		for (InputListDTO Ip : list) {
-			System.out.print("ÀÔ°í¹øÈ£:  " + Ip.getInum() + "\t");
-			System.out.print("¹°Ç°¹øÈ£:  " + Ip.getPnum() + "\t");
-			System.out.print("¹°Ç°¸í:  " + Ip.getPname() + "\t");
-			System.out.print("ÀÔ°í¼ö·® : " + Ip.getIqty() + "\t");
-			System.out.print("Àç°í:  " + Ip.getStock() + "\n");
+			System.out.print("ì…ê³ ë²ˆí˜¸:  " + Ip.getInum() + "\t");
+			System.out.print("ë¬¼í’ˆë²ˆí˜¸:  " + Ip.getPnum() + "\t");
+			System.out.print("ë¬¼í’ˆëª…:  " + Ip.getPname() + "\t");
+			System.out.print("ì…ê³ ìˆ˜ëŸ‰ : " + Ip.getIqty() + "\t");
+			System.out.print("ì¬ê³ :  " + Ip.getStock() + "\n");
 		}
 		try {
 			InputListDTO dto = new InputListDTO();
-			System.out.print("¼öÁ¤ ÇÒ ÀÔ°í¹øÈ£?");
+			System.out.print("ìˆ˜ì • í•  ì…ê³ ë²ˆí˜¸?");
 			dto.setInum(sc.nextInt());
 			InputDTO input = dao.readInput(dto.getInum());
 			if (input == null) {
-				System.out.println("Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù.");
+				System.out.println("ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤.");
 				return;
 			}
-			System.out.print("ÀÔ°í ³¯Â¥?");
+			System.out.print("ì…ê³  ë‚ ì§œ?");
 			dto.setIdate(sc.next());
-			System.out.print("¼ö·®?");
+			System.out.print("ìˆ˜ëŸ‰?");
 			int beforeIqty = input.getIqty();
 			dto.setIqty(sc.nextInt());
 			if (beforeIqty >= dto.getIqty()) {
-				System.out.println("Àç°í¼ö·®Àº ÀÌÀü ¼ö·®º¸´Ù Å©°Ô ÀÔ·ÂÇØ¾ß ÇÕ´Ï´Ù.");
+				System.out.println("ì¬ê³ ìˆ˜ëŸ‰ì€ ì´ì „ ìˆ˜ëŸ‰ë³´ë‹¤ í¬ê²Œ ì…ë ¥í•´ì•¼ í•©ë‹ˆë‹¤.");
 				return;
 			}
-			int result = dao.updateProduct(dto);
+			int result = dao.updateInput(dto);
 			if (result != 0) {
-				System.out.println("¼öÁ¤ ¿Ï·á.");
+				System.out.println("ìˆ˜ì • ì™„ë£Œ.");
 			} else {
-				System.out.println("¼öÁ¤ ½ÇÆĞ");
+				System.out.println("ìˆ˜ì • ì‹¤íŒ¨");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	// Á¦Ç°»èÁ¦
+	// ì œí’ˆì‚­ì œ
 	public void delete() {
-		System.out.println("[¹°Ç° »èÁ¦ ]");
+		System.out.println("[ë¬¼í’ˆ ì‚­ì œ ]");
 		List<InputListDTO> list = dao.listStock();
 		for (InputListDTO Ip : list) {
-			System.out.print("ÀÔ°í¹øÈ£:  " + Ip.getInum() + "\t");
-			System.out.print("¹°Ç°¹øÈ£:  " + Ip.getPnum() + "\t");
-			System.out.print("¹°Ç°¸í:  " + Ip.getPname() + "\t");
-			System.out.print("ÀÔ°í¼ö·® : " + Ip.getIqty() + "\t");
-			System.out.print("Àç°í:  " + Ip.getStock() + "\n");
+			System.out.print("ì…ê³ ë²ˆí˜¸:  " + Ip.getInum() + "\t");
+			System.out.print("ë¬¼í’ˆë²ˆí˜¸:  " + Ip.getPnum() + "\t");
+			System.out.print("ë¬¼í’ˆëª…:  " + Ip.getPname() + "\t");
+			System.out.print("ì…ê³ ìˆ˜ëŸ‰ : " + Ip.getIqty() + "\t");
+			System.out.print("ì¬ê³ :  " + Ip.getStock() + "\n");
 		}
 		int inum;
 		try {
-			InputDTO dto = new InputDTO();
-			System.out.print("»èÁ¦ÇÒ ÀÔ°í ¹øÈ£?");
+			System.out.print("ì‚­ì œí•  ì…ê³  ë²ˆí˜¸?");
 			inum = sc.nextInt();
 			int result = dao.deleteProduct(inum);
 			if (result != 0) {
-				System.out.println(result + "¹ø ¹°Ç°À» »èÁ¦ Çß½À´Ï´Ù.");
+				System.out.println(result + "ë²ˆ ë¬¼í’ˆì„ ì‚­ì œ í–ˆìŠµë‹ˆë‹¤.");
 			} else {
-				System.out.println("»èÁ¦ ½ÇÆĞ.");
+				System.out.println("ì‚­ì œ ì‹¤íŒ¨.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	// Àç°í¸®½ºÆ®
+	// ì¬ê³ ë¦¬ìŠ¤íŠ¸
 	public void liststock() {
-		System.out.println("¹°Ç° Àç°í ¸®½ºÆ®");
+		System.out.println("ë¬¼í’ˆ ì¬ê³  ë¦¬ìŠ¤íŠ¸");
 		List<InputListDTO> list = dao.listStock();
 		for (InputListDTO dto : list) {
-			System.out.print("ÀÔ°í¹øÈ£:  " + dto.getInum() + "\t");
-			System.out.print("¹°Ç°¹øÈ£:  " + dto.getPnum() + "\t");
-			System.out.print("¹°Ç°¸í:  " + dto.getPname() + "\t");
-			System.out.print("Àç°í:  " + dto.getStock() + "\n");
+			System.out.print("ì…ê³ ë²ˆí˜¸:  " + dto.getInum() + "\t");
+			System.out.print("ë¬¼í’ˆë²ˆí˜¸:  " + dto.getPnum() + "\t");
+			System.out.print("ë¬¼í’ˆëª…:  " + dto.getPname() + "\t");
+			System.out.print("ì¬ê³ :  " + dto.getStock() + "\n");
 		}
 	}
 
 	public void sales() {
 		int ch;
 		while (true) {
-			System.out.println("\n ¾à»ç");
+			System.out.println("\n ì•½ì‚¬");
 			do {
-				System.out.println("1.¼Õ´Ôº° ¸¶½ºÅ© ÆÇ¸ÅÇöÈ² 2.ÀüÃ¼ ÆÇ¸Å¸®½ºÆ®  3.Á¾·á=>");
+				System.out.println("1.ì†ë‹˜ë³„ ë§ˆìŠ¤í¬ íŒë§¤í˜„í™© 2.ì „ì²´ íŒë§¤ë¦¬ìŠ¤íŠ¸  3.ì¢…ë£Œ=>");
 				ch = sc.nextInt();
 			} while (ch < 1 || ch > 3);
 			if (ch == 3)
@@ -234,28 +324,28 @@ public class Pharmacist {
 		}
 	}
 
-//ÁÖ¹Î¹øÈ£ À¯È¿¼º°Ë»ç	
+//ì£¼ë¯¼ë²ˆí˜¸ ìœ íš¨ì„±ê²€ì‚¬	
 	public boolean isValidRRN(String rrn) {
 		int year, month, day;
 		int endDayOfMonth;
 		try {
-			// 1. ¾ÕÀÚ¸® 6ÀÚ¸® + µŞÀÚ¸® 7ÀÚ¸® = 13 È¤Àº ÇÏÀÌÇÂ Æ÷ÇÔÇÏ¿© 14ÀÚ¸®ÀÎÁö °Ë»ç
+			// 1. ì•ìë¦¬ 6ìë¦¬ + ë’·ìë¦¬ 7ìë¦¬ = 13 í˜¹ì€ í•˜ì´í”ˆ í¬í•¨í•˜ì—¬ 14ìë¦¬ì¸ì§€ ê²€ì‚¬
 			if (rrn.length() < 13 || rrn.length() > 14) {
-				System.out.println("ÁÖ¹Îµî·Ï¹øÈ£ ÀÚ¸´¼ö ¿À·ù");
+				System.out.println("ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ ìë¦¿ìˆ˜ ì˜¤ë¥˜");
 				return false;
 			}
 			year = Integer.parseInt(rrn.substring(0, 2));
 			month = Integer.parseInt(rrn.substring(2, 4));
 			day = Integer.parseInt(rrn.substring(4, 6));
 			if (month < 1 || month > 12) {
-				System.out.println("¿ù ÀÔ·Â¿À·ù : " + month+"¿ù ·Î ÀÔ·ÂÇß½À´Ï´Ù.");
+				System.out.println("ì›” ì…ë ¥ì˜¤ë¥˜ : " + month+"ì›” ë¡œ ì…ë ¥í–ˆìŠµë‹ˆë‹¤.");
 				return false;
 			}
 			Calendar cal = Calendar.getInstance();
 			cal.set(year, month - 1, 1);
 			endDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 			if (day < 1 || day > endDayOfMonth) {
-				System.out.println("ÀÏ ÀÔ·Â¿À·ù : " + day + "ÀÏ ·Î ÀÔ·ÂÇß½À´Ï´Ù.");
+				System.out.println("ì¼ ì…ë ¥ì˜¤ë¥˜ : " + day + "ì¼ ë¡œ ì…ë ¥í–ˆìŠµë‹ˆë‹¤.");
 				return false;
 			}
 		} catch (Exception e) {
@@ -265,18 +355,18 @@ public class Pharmacist {
 		return true;
 	}
 	
-// ¼Õ´Ôº° ¸¶½ºÅ©ÆÇ¸Å¸®½ºÆ®
+// ì†ë‹˜ë³„ ë§ˆìŠ¤í¬íŒë§¤ë¦¬ìŠ¤íŠ¸
 	public void customerlist() {
-		System.out.println("\n¼Õ´Ôº° ¸¶½ºÅ© ÆÇ¸Å¸®½ºÆ®...");
-		String rrn;
+		System.out.println("\nì†ë‹˜ë³„ ë§ˆìŠ¤í¬ íŒë§¤ë¦¬ìŠ¤íŠ¸...");
+		String rrn
 		while (true) {
-			System.out.println("°Ë»öÇÒ ¼Õ´Ô ÁÖ¹Îµî·Ï¹øÈ£(Àü ¸Ş´º·Î µ¹¾Æ°¡±â : n)?");
+			System.out.println("ê²€ìƒ‰í•  ì†ë‹˜ ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸(ì „ ë©”ë‰´ë¡œ ëŒì•„ê°€ê¸° : n)?");
 			rrn = sc.next();
-			if(rrn.equalsIgnoreCase("n")) {  //ÁÖ¹Î¹øÈ£ À¯È¿¼º°Ë»ç ¸Ş¼Òµå È£Ãâ
+			if(rrn.equalsIgnoreCase("n")) {  //ì£¼ë¯¼ë²ˆí˜¸ ìœ íš¨ì„±ê²€ì‚¬ ë©”ì†Œë“œ í˜¸ì¶œ
 				return;
 			}
 			if (isValidRRN(rrn)==false) {
-				System.out.println("´Ù½Ã ÀÔ·ÂÇØÁÖ¼¼¿ä^^");
+				System.out.println("ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”^^");
 			}
 			else{
 				break;
@@ -284,7 +374,7 @@ public class Pharmacist {
 		}
 		List<SaleSumDTO> list = dao.listCustomer(rrn);
 
-		System.out.println("ÀÌ¸§\t ±¸¸Å³¯Â¥\t\t ÆÇ¸ÅÇ°¸ñ\t\tÆÇ¸Å¼ö·®");
+		System.out.println("ì´ë¦„\t êµ¬ë§¤ë‚ ì§œ\t\t íŒë§¤í’ˆëª©\t\tíŒë§¤ìˆ˜ëŸ‰");
 
 		for (SaleSumDTO dto : list) {
 			System.out.print(dto.getcName() + "\t");
@@ -294,11 +384,11 @@ public class Pharmacist {
 		}
 	}
 
-//ÀüÃ¼ ÆÇ¸Å¸®½ºÆ®
+//ì „ì²´ íŒë§¤ë¦¬ìŠ¤íŠ¸
 	private void productlist() {
-		System.out.println("\nÇ°¸ñº° ÀüÃ¼ ÆÇ¸Å¸®½ºÆ®...");
+		System.out.println("\ní’ˆëª©ë³„ ì „ì²´ íŒë§¤ë¦¬ìŠ¤íŠ¸...");
 		List<SaleSumDTO> list = dao.listSumProduct();
-		System.out.println("Ç°¸ñÀÌ¸§\t Ç°¸ñ¹øÈ£\tÀç°í¼ö·®\tÆÇ¸Å³¯Â¥");
+		System.out.println("í’ˆëª©ì´ë¦„\t í’ˆëª©ë²ˆí˜¸\tì¬ê³ ìˆ˜ëŸ‰\tíŒë§¤ë‚ ì§œ");
 		for (SaleSumDTO dto : list) {
 			System.out.print(dto.getpName() + "\t");
 			System.out.print(dto.getpNum() + "\t");
@@ -307,7 +397,7 @@ public class Pharmacist {
 		}
 	}
 
-//Ã³¹æ
+//ì²˜ë°©
 
 	public void prescription() {
 		int ch;
@@ -335,37 +425,37 @@ public class Pharmacist {
 	}
 
 	public void prescribe() {
-		int result; // Äõ¸® Ã³¸®°á°ú
-		int choice, qty; // ¼±ÅÃ¹øÈ£, ¼ö·®
-		String keyword; // °Ë»ö¾î
+		int result; // ì¿¼ë¦¬ ì²˜ë¦¬ê²°ê³¼
+		int choice, qty; // ì„ íƒë²ˆí˜¸, ìˆ˜ëŸ‰
+		String keyword; // ê²€ìƒ‰ì–´
 		List<ProductDTO> list = null;
 		try {
-			System.out.print("\n Áõ»ó ÀÔ·Â > ");
+			System.out.print("\n ì¦ìƒ ì…ë ¥ > ");
 			keyword = sc.next().trim();
 			if (keyword == null || keyword.length() == 0) {
-				System.out.println("Å°¿öµå¸¦ ÀÔ·ÂÇÏ¼¼¿ä...");
+				System.out.println("í‚¤ì›Œë“œë¥¼ ì…ë ¥í•˜ì„¸ìš”...");
 				return;
 			}
 			list = dao.searchKeyword(keyword);
 			if (list == null || list.size() == 0) {
-				System.out.println("°Ë»ö °á°ú°¡ ¾ø½À´Ï´Ù.");
+				System.out.println("ê²€ìƒ‰ ê²°ê³¼ê°€ ì—†ìŠµë‹ˆë‹¤.");
 				return;
 			}
 			for (int i = 0; i < list.size(); i++) {
-				// °ü·Ã »óÇ° Ãâ·Â
-				System.out.println(i + 1 + "¹ø. " + list.get(i).toString());
+				// ê´€ë ¨ ìƒí’ˆ ì¶œë ¥
+				System.out.println(i + 1 + "ë²ˆ. " + list.get(i).toString());
 			}
-			System.out.print("\n Ã³¹æÇÒ ¾à ¸ñ·Ï ¹øÈ£¸¦ ¼±ÅÃ > ");
+			System.out.print("\n ì²˜ë°©í•  ì•½ ëª©ë¡ ë²ˆí˜¸ë¥¼ ì„ íƒ > ");
 			choice = sc.nextInt();
 			if (choice < 1 || choice > list.size()) {
-				System.out.println("¿Ã¹Ù¸¥ ¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+				System.out.println("ì˜¬ë°”ë¥¸ ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš”.");
 				return;
 			}
-			System.out.print("¼ö·® ÀÔ·Â ? ");
+			System.out.print("ìˆ˜ëŸ‰ ì…ë ¥ ? ");
 			qty = sc.nextInt();
 			result = dao.insertSale(list.get(choice - 1).getPnum(), qty);
 			if (result != 0) {
-				System.out.println("Ã³¹æµÇ¾ú½À´Ï´Ù. £¼£¨£Ş£­£Ş£©£¾");
+				System.out.println("ì²˜ë°©ë˜ì—ˆìŠµë‹ˆë‹¤. ï¼œï¼ˆï¼¾ï¼ï¼¾ï¼‰ï¼");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -378,39 +468,39 @@ public class Pharmacist {
 		int result;
 		String keyword;
 		int pnum;
-		System.out.print("1.Áõ»ó¸ñ·Ï 2.Áõ»óÃß°¡ 3.Áõ»ó»èÁ¦ 4.µÚ·Î°¡±â> ");
+		System.out.print("1.ì¦ìƒëª©ë¡ 2.ì¦ìƒì¶”ê°€ 3.ì¦ìƒì‚­ì œ 4.ë’¤ë¡œê°€ê¸°> ");
 		ch = sc.nextInt();
 		if (ch == 4) {
 			return;
 		} else if (ch < 1 || ch > 4) {
-			System.out.println("¿Ã¹Ù¸¥ ¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä...");
+			System.out.println("ì˜¬ë°”ë¥¸ ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”...");
 			return;
 		}
 		List<String> keywords = dao.getKeywords();
 		List<ProductKeywordDTO> list = null;
 		printSymtoms(keywords);
 		switch (ch) {
-		case 1:// Áõ»ó ¸ñ·Ï
+		case 1:// ì¦ìƒ ëª©ë¡
 			if (keywords == null || keywords.size() == 0) {
-				System.out.println("µî·ÏµÈ Áõ»ó ¸ñ·ÏÀÌ ¾ø½À´Ï´Ù. Áõ»ó Ãß°¡¸¦ ÀÌ¿ëÇÏ¿© µî·ÏÇØ ÁÖ¼¼¿ä...");
+				System.out.println("ë“±ë¡ëœ ì¦ìƒ ëª©ë¡ì´ ì—†ìŠµë‹ˆë‹¤. ì¦ìƒ ì¶”ê°€ë¥¼ ì´ìš©í•˜ì—¬ ë“±ë¡í•´ ì£¼ì„¸ìš”...");
 				return;
 			}
-			System.out.println("µî·ÏµÈ Áõ»ó ¸ñ·ÏÀº ´ÙÀ½°ú °°½À´Ï´Ù...");
+			System.out.println("ë“±ë¡ëœ ì¦ìƒ ëª©ë¡ì€ ë‹¤ìŒê³¼ ê°™ìŠµë‹ˆë‹¤...");
 			while (true) {
-				System.out.print("Å°¿öµå ¹øÈ£ ÀÔ·Â (³ª°¡±â: 0)> ");
+				System.out.print("í‚¤ì›Œë“œ ë²ˆí˜¸ ì…ë ¥ (ë‚˜ê°€ê¸°: 0)> ");
 				ch = sc.nextInt();
 				if (ch == 0) {
 					break;
 				}
 				keyword = keywords.get(ch - 1);
 				list = dao.listByKeyword(keyword);
-				System.out.println(keyword + " °Ë»ö °á°ú ..." + "(ÃÑ " + list.size() + "°Ç)");
+				System.out.println(keyword + " ê²€ìƒ‰ ê²°ê³¼ ..." + "(ì´ " + list.size() + "ê±´)");
 				printSymtomObjects(list);
 			}
 			break;
-		case 2:// Áõ»ó Ãß°¡
-			System.out.println("±âÁ¸¿¡ µî·ÏµÈ Áõ»ó Ç×¸ñÀº ´ÙÀ½°ú °°½À´Ï´Ù. ");
-			System.out.print("Ãß°¡ÇÒ Áõ»ó(ÁÖ°ü½Ä) ? ");
+		case 2:// ì¦ìƒ ì¶”ê°€
+			System.out.println("ê¸°ì¡´ì— ë“±ë¡ëœ ì¦ìƒ í•­ëª©ì€ ë‹¤ìŒê³¼ ê°™ìŠµë‹ˆë‹¤. ");
+			System.out.print("ì¶”ê°€í•  ì¦ìƒ(ì£¼ê´€ì‹) ? ");
 			keyword = sc.next();
 			List<ProductDTO> target = dao.listProduct();
 			while (true) {
@@ -419,7 +509,7 @@ public class Pharmacist {
 				}
 				printProducts(target);
 
-				System.out.print("Ãß°¡ÇÒ »óÇ°¹øÈ£ (³ª°¡±â: 0)? ");
+				System.out.print("ì¶”ê°€í•  ìƒí’ˆë²ˆí˜¸ (ë‚˜ê°€ê¸°: 0)? ");
 				pnum = sc.nextInt();
 				if (pnum == 0) {
 					break;
@@ -431,14 +521,14 @@ public class Pharmacist {
 							target.remove(i);
 						}
 					}
-					System.out.println("Áõ»óÀÌ Á¤»óÀûÀ¸·Î µî·ÏµÇ¾ú½À´Ï´Ù.");
+					System.out.println("ì¦ìƒì´ ì •ìƒì ìœ¼ë¡œ ë“±ë¡ë˜ì—ˆìŠµë‹ˆë‹¤.");
 				} else {
-					System.out.println("ÀÌ¹Ì µî·ÏµÇ¾ú½À´Ï´Ù¸¸...?");
+					System.out.println("ì´ë¯¸ ë“±ë¡ë˜ì—ˆìŠµë‹ˆë‹¤ë§Œ...?");
 				}
 			}
 			break;
-		case 3:// Áõ»ó »èÁ¦
-			System.out.print("»èÁ¦ÇÒ Áõ»ó (ÁÖ°ü½Ä) ? ");
+		case 3:// ì¦ìƒ ì‚­ì œ
+			System.out.print("ì‚­ì œí•  ì¦ìƒ (ì£¼ê´€ì‹) ? ");
 			keyword = sc.next();
 			while (true) {
 				list = dao.listByKeyword(keyword);
@@ -446,16 +536,16 @@ public class Pharmacist {
 					break;
 				}
 				printSymtomObjects(list);
-				System.out.print("»èÁ¦ÇÒ »óÇ°¹øÈ£ (³ª°¡±â: 0) ? ");
+				System.out.print("ì‚­ì œí•  ìƒí’ˆë²ˆí˜¸ (ë‚˜ê°€ê¸°: 0) ? ");
 				pnum = sc.nextInt();
 				if (pnum == 0) {
 					break;
 				}
 				result = dao.deleteKeywordProduct(pnum, keyword);
 				if (result != 0) {
-					System.out.println("Áõ»óÀÌ ¼º°øÀûÀ¸·Î »èÁ¦µÇ¾ú½À´Ï´Ù.");
+					System.out.println("ì¦ìƒì´ ì„±ê³µì ìœ¼ë¡œ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
 				} else {
-					System.out.println("»óÇ°¹øÈ£¸¦ Á¤È®ÇÏ°Ô ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+					System.out.println("ìƒí’ˆë²ˆí˜¸ë¥¼ ì •í™•í•˜ê²Œ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
 				}
 			}
 

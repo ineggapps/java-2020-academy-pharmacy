@@ -2,9 +2,14 @@
 import java.util.List;
 
 public interface ProductDAO {
-	public int insertProduct(InputDTO dto); //제품추가-입고등록
-	public int updateProduct(InputListDTO dto); //제품수정-제품수정
-	public int deleteProduct(int inum); //제품삭제-제품삭제
+	public ProductDTO readProduct(int pnum); //제품검색
+	public int insertProduct(ProductDTO dto);//제품추가
+	public int updateProduct(ProductDTO dto); //제품수정
+	public int deleteProduct(int pnum);//제품삭제
+	
+	public int insertInput(InputDTO dto); //입고등록
+	public int updateInput(InputListDTO dto); //제품수정-제품수정
+	public int deleteInput(int inum); //제품삭제-제품삭제
 	public InputDTO readInput(int inum   ); //재고정보 (재고번호 기반)
 	public List<InputListDTO> listStock();//남은재고안내
 	public List<ProductDTO> listProduct(); //상품 리스트
