@@ -1,3 +1,4 @@
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,7 @@ public class Pharmacist {
 		}
 	}
 
+
 	public void inventory() {
 		int ch;
 		while (true) {
@@ -106,6 +108,7 @@ public class Pharmacist {
 			}
 		}
 	}
+
 
 	// 제품추가
 	public void insert() {
@@ -224,8 +227,10 @@ public class Pharmacist {
 	}
 
 	// 물품수정
+
 	public void updateInput() {
 		System.out.println("물품 수정 ... ");
+
 		List<InputListDTO> list = dao.listStock();
 		for (InputListDTO Ip : list) {
 			System.out.print("입고번호:  " + Ip.getInum() + "\t");
@@ -264,8 +269,9 @@ public class Pharmacist {
 	}
 
 	// 제품삭제
+
 	public void deleteInput() {
-		System.out.println("[ 물품 삭제 ]");
+
 		List<InputListDTO> list = dao.listStock();
 		for (InputListDTO Ip : list) {
 			System.out.print("입고번호:  " + Ip.getInum() + "\t");
@@ -286,6 +292,17 @@ public class Pharmacist {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	// 재고리스트
+	public void liststock() {
+		System.out.println("물품 재고 리스트");
+		List<InputListDTO> list = dao.listStock();
+		for (InputListDTO dto : list) {
+			System.out.print("입고번호:  " + dto.getInum() + "\t");
+			System.out.print("물품번호:  " + dto.getPnum() + "\t");
+			System.out.print("물품명:  " + dto.getPname() + "\t");
+			System.out.print("재고:  " + dto.getStock() + "\n");
 		}
 	}
 
@@ -311,27 +328,58 @@ public class Pharmacist {
 		}
 	}
 
-	// 재고리스트
-	public void liststock() {
-		System.out.println("물품 재고 리스트");
-		List<InputListDTO> list = dao.listStock();
-		for (InputListDTO dto : list) {
-			System.out.print("입고번호:  " + dto.getInum() + "\t");
-			System.out.print("물품번호:  " + dto.getPnum() + "\t");
-			System.out.print("물품명:  " + dto.getPname() + "\t");
-			System.out.print("재고:  " + dto.getStock() + "\n");
+//주민번호 유효성검사	
+	public boolean isValidRRN(String rrn) {
+		int year, month, day;
+		int endDayOfMonth;
+		try {
+			// 1. 앞자리 6자리 + 뒷자리 7자리 = 13 혹은 하이픈 포함하여 14자리인지 검사
+			if (rrn.length() < 13 || rrn.length() > 14) {
+				System.out.println("주민등록번호 자릿수 오류");
+				return false;
+			}
+			year = Integer.parseInt(rrn.substring(0, 2));
+			month = Integer.parseInt(rrn.substring(2, 4));
+			day = Integer.parseInt(rrn.substring(4, 6));
+			if (month < 1 || month > 12) {
+				System.out.println("월 입력오류 : " + month+"월 로 입력했습니다.");
+				return false;
+			}
+			Calendar cal = Calendar.getInstance();
+			cal.set(year, month - 1, 1);
+			endDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+			if (day < 1 || day > endDayOfMonth) {
+				System.out.println("일 입력오류 : " + day + "일 로 입력했습니다.");
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
-
-	// 손님별 마스크판매리스트
+	
+// 손님별 마스크판매리스트
 	public void customerlist() {
 		System.out.println("\n손님별 마스크 판매리스트...");
 		String rrn;
-		System.out.println("검색할 손님? (주민등록번호) > ");
-		rrn = sc.next();
-		List<SaleSumDTO> list = dao.listCustomer(rrn);
 
-		System.out.println("이름\t 구매날짜\t\t 판매품목\t\t판매수량");
+		while (true) {
+			System.out.println("검색할 손님 주민등록번호(전 메뉴로 돌아가기 : n)?");
+			rrn = sc.next();
+			if(rrn.equalsIgnoreCase("n")) {  //주민번호 유효성검사 메소드 호출
+				return;
+			}
+			if (isValidRRN(rrn)==false) {
+				System.out.println("다시 입력해주세요^^");
+			}
+			else{
+				break;
+			}
+		}
+
+		List<SaleSumDTO> list = dao.listCustomer(rrn);
+		System.out.println("이름\t 판매날짜\t\t판매품목\t\t구매수량");
 
 		for (SaleSumDTO dto : list) {
 			System.out.print(dto.getcName() + "\t");
@@ -343,9 +391,9 @@ public class Pharmacist {
 
 //전체 판매리스트
 	private void productlist() {
-		System.out.println("\n품목별 판매리스트...");
+		System.out.println("\n품목별 전체 판매리스트...");
 		List<SaleSumDTO> list = dao.listSumProduct();
-
+		System.out.println("품목이름\t 품목번호\t재고수량\t판매날짜");
 		for (SaleSumDTO dto : list) {
 			System.out.print(dto.getpName() + "\t");
 			System.out.print(dto.getpNum() + "\t");
@@ -361,7 +409,6 @@ public class Pharmacist {
 		try {
 			while (true) {
 				do {
-					System.out.print("1.처방하기 2.처방관리 3.뒤로가기 > ");
 					ch = sc.nextInt();
 				} while (ch < 1 || ch > 3);
 				switch (ch) {
