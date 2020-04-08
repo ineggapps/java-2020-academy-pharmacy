@@ -14,9 +14,50 @@ import oracle.jdbc.OracleTypes;
 public class ProductDAOImpl implements ProductDAO {
 	private Connection conn = DBConn.getConnection();
 
+//제품번호로 조회	
+	@Override
+	 public ProductDTO readProduct(int pnum) {
+	  ProductDTO dto = null;
+	  PreparedStatement pstmt=null;
+	  ResultSet rs =null;
+	  String sql;
+	  
+	  sql="SELECT pnum, pname, price, stock  FROM product WHERE pnum = ?";
+	  
+	  try {
+	   pstmt=conn.prepareStatement(sql);
+	   pstmt.setInt(1, pnum);
+	   rs=pstmt.executeQuery();
+	   
+	   if(rs.next()) {
+	    dto =new ProductDTO();  
+	    dto.setPnum(rs.getInt("pnum"));
+	    dto.setPname(rs.getString("pname"));
+	    dto.setPrice(rs.getInt("price"));
+	    dto.setStock(rs.getInt("stock"));
+	   }
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  } finally {
+	   if(rs!=null) {
+	    try {
+	     rs.close();   
+	    } catch (Exception e2) {    
+	    }
+	   }
+	   if(pstmt!=null) {
+	    try {
+	     pstmt.close();
+	    } catch (Exception e2) {     
+	    }
+	   }
+	  }
+	  return dto;
+	 }
+
 //입고(제품추가)
 	@Override
-	public int insertProduct(InputDTO dto) {
+	public int insertInput(InputDTO dto) {
 		int result = 0;
 		CallableStatement cstmt = null;
 		String sql;
@@ -45,7 +86,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 //제품수정
 	@Override
-	public int updateProduct(InputListDTO dto) {
+	public int updateInput(InputListDTO dto) {
 		CallableStatement cstmt = null;
 		int result = 0;
 		String sql;
@@ -72,7 +113,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 //제품삭제
 	@Override
-	public int deleteProduct(int inum) {
+	public int deleteInput(int inum) {
 		CallableStatement cstmt = null;
 		String sql;
 		int result = 0;
@@ -504,5 +545,88 @@ public class ProductDAOImpl implements ProductDAO {
 //				message.indexOf(ERROR_END));
 //		return message;
 //	}
+	
+	@Override
+	 public int insertProduct(ProductDTO dto) {
+	  int result = 0;
+	  PreparedStatement pstmt = null;
+	  String sql;
+	  
+	  try {
+	   sql = "INSERT INTO product VALUES(?,?,?,0)";
+	   pstmt = conn.prepareStatement(sql);
+	   
+	   pstmt.setInt(1, dto.getPnum());
+	   pstmt.setString(2, dto.getPname());
+	   pstmt.setInt(3, dto.getPrice());
+	   
+	   result=pstmt.executeUpdate();
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  } finally {
+	   if(pstmt!=null) {
+	    try {
+	     pstmt.close();
+	    } catch (Exception e2) {
+	    }
+	   }
+	  } 
+	  return result;
+	 }
+
+	@Override
+	 public int updateProduct(ProductDTO dto) {
+	  int result = 0;
+	  PreparedStatement pstmt = null;
+	  String sql;
+	  
+	  try {
+	   sql = "UPDATE product SET pname=?, price=? WHERE pnum=?";
+	   pstmt = conn.prepareStatement(sql);
+	   
+	   pstmt.setString(1, dto.getPname());
+	   pstmt.setInt(2, dto.getPrice());
+	   pstmt.setInt(3, dto.getPnum());
+	   
+	   result=pstmt.executeUpdate();
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  } finally {
+	   if(pstmt!=null) {
+	    try {
+	     pstmt.close();
+	    } catch (Exception e2) {
+	    }
+	   }
+	  } 
+	  return result;
+	 }
+	
+	 @Override
+	 public int deleteProduct(int pnum) {
+	  int result = 0;
+	  PreparedStatement pstmt = null;
+	  String sql;
+	  
+	  try {
+	   sql = "DELETE FROM product WHERE pnum=?";
+	   pstmt = conn.prepareStatement(sql);
+	   
+	   pstmt.setInt(1, pnum);
+	   
+	   result=pstmt.executeUpdate();
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  } finally {
+	   if(pstmt!=null) {
+	    try {
+	     pstmt.close();
+	    } catch (Exception e2) {
+	    }
+	   }
+	  } 
+	  return result;
+	 }
+
 
 }
