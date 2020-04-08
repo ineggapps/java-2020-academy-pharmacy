@@ -58,50 +58,39 @@ BEGIN
 DBMS_JOB.SUBMIT
 (
 X -- 잡등록 ID
-,'PHARMACY_INPUT_TEST;' -- 실행할 프로시저명
-,to_date('03-04-2020 15:31:00','dd/mm/yyyy hh24:mi:ss') --실행시킬 시간 지정
-,'SYSDATE+2/(1440)' --반복기간 지정
+,'PHARMACY_INPUT_AUTOMATICALLY;' -- 실행할 프로시저명
+,SYSDATE --실행시킬 시간 지정
+,'SYSDATE+60/(1440)' --반복기간 지정
 ,FALSE 
 );
 END;
 /
+SELECT inum, TO_CHAR(idate, 'yyyy-mm-dd hh:mi:ss') idate, iqty FROM input order by inum desc;
+exec PHARMACY_INPUT_AUTOMATICALLY();
+select * from user_jobs;
+EXECUTE dbms_job.REMOVE(147);
+commit;
+select * from product;
 
-SELECT * FROM USER_SCHEDULER_JOBS; --등록된 job
-SELECT * FROM USER_SCHEDULER_JOB_ARGS; --job의 arguments
-SELECT * FROM USER_SCHEDULER_RUNNING_JOBS; --현재 running중인 job들의정보
-SELECT * FROM USER_SCHEDULER_JOB_LOG; --job의 log
-SELECT * FROM USER_SCHEDULER_JOB_RUN_DETAILS; --job의수행된정보및Error 정보
-SELECT * FROM USER_SCHEDULER_PROGRAMS; -- 등록된 Program
-SELECT * FROM USER_SCHEDULER_PROGRAM_ARGS; -- 프로그램의 매게변수
-SELECT * FROM USER_SCHEDULER_SCHEDULES; --등록된 스케쥴러
-
-
-drop table test purge;
-create table test(
-    test date
-);
-
-DECLARE
-BEGIN
-    DBMS_JOB.REMOVE(61);
-END;
-/
-
-
-CREATE OR REPLACE PROCEDURE PHARMACY_INPUT_TEST
+CREATE OR REPLACE PROCEDURE PHARMACY_INPUT_AUTOMATICALLY
 IS
+productNum NUMBER;
 BEGIN
-    INSERT INTO test(test) VALUES(SYSDATE);
+    SELECT pnum INTO productNum FROM(
+        SELECT pnum FROM product
+--        WHERE stock<10
+        ORDER BY DBMS_RANDOM.value()
+    ) WHERE ROWNUM = 1;
+    insertInputWithoutOut(productNum, SYSDATE, DBMS_RANDOM.value(1,10));
     COMMIT;
 END;
 /
 
-exec PHARMACY_INPUT_TEST();
-delete from test;
-commit;
-select TO_CHAR(test, 'HH24:MI:SS') from test order by test desc;
-
-commit;
+--랜덤 행 추출
+SELECT pnum FROM(
+    SELECT pnum FROM product
+    ORDER BY DBMS_RANDOM.value()
+) WHERE ROWNUM = 1;
 
 --시퀀스
 
