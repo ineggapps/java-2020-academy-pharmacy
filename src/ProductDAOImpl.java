@@ -183,11 +183,11 @@ public class ProductDAOImpl implements ProductDAO {
 			sb.append(" FROM sale s");
 			sb.append(" JOIN product p ON s.pNum=p.pNum");
 			sb.append(" JOIN customer c ON s.cNum=c.cNum");
-			sb.append(" WHERE LENGTH(rrn)=14 AND p.pnum=?");
+			sb.append(" WHERE rrn=? AND p.pnum=?");
 			sb.append(" GROUP BY p.pnum ,cName, TO_CHAR(sDate,'yyyy-mm-dd'), pName");
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setString(1, rrn);
-			pstmt.setInt(1, 1);
+			pstmt.setInt(2, 1);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				SaleSumDTO dto = new SaleSumDTO();
@@ -225,7 +225,7 @@ public class ProductDAOImpl implements ProductDAO {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("SELECT pName,p.pNum,SUM(sQty) sQty,");
-		sb.append("TO_CHAR(sDate,'yyyy-mm-dd')sDate");
+		sb.append("TO_CHAR(sDate,'yyyy-mm-dd') sDate");
 		sb.append(" FROM sale s");
 		sb.append(" JOIN product p ON s.pNum=p.pNum");
 		sb.append(" GROUP BY pName,p.pNum,TO_CHAR(sDate,'yyyy-mm-dd')");
