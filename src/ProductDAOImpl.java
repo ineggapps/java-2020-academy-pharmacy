@@ -13,6 +13,45 @@ import oracle.jdbc.OracleTypes;
 
 public class ProductDAOImpl implements ProductDAO {
 	private Connection conn = DBConn.getConnection();
+	@Override
+	 public ProductDTO readProduct(int pnum) {
+	  ProductDTO dto = null;
+	  PreparedStatement pstmt=null;
+	  ResultSet rs =null;
+	  String sql;
+	  
+	  sql="SELECT pnum, pname, price, stock  FROM product WHERE pnum = ?";
+	  
+	  try {
+	   pstmt=conn.prepareStatement(sql);
+	   pstmt.setInt(1, pnum);
+	   rs=pstmt.executeQuery();
+	   
+	   if(rs.next()) {
+	    dto =new ProductDTO();  
+	    dto.setPnum(rs.getInt("pnum"));
+	    dto.setPname(rs.getString("pname"));
+	    dto.setPrice(rs.getInt("price"));
+	    dto.setStock(rs.getInt("stock"));
+	   }
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  } finally {
+	   if(rs!=null) {
+	    try {
+	     rs.close();   
+	    } catch (Exception e2) {    
+	    }
+	   }
+	   if(pstmt!=null) {
+	    try {
+	     pstmt.close();
+	    } catch (Exception e2) {     
+	    }
+	   }
+	  }
+	  return dto;
+	 }
 
 //입고(제품추가)
 	@Override

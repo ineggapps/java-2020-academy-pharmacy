@@ -127,44 +127,73 @@ public class Pharmacist {
 		System.out.println();
 	}
 
-	// 제품수정
-	public void update() {
-		System.out.println("\n 제품수정...");
-		ProductDTO dto = new ProductDTO();
-		try {
-
-			System.out.print(" 수정할 품목 번호? ");
-			dto.setPnum(sc.nextInt());
-			System.out.print("품목 명? ");
-			dto.setPname(sc.next());
-			System.out.print("판매가 ? ");
-			dto.setPrice(sc.nextInt());
-
-			int result = dao.updateProduct(dto);
-			System.out.println(result + "이 수정 완료 되었습니다.");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println();
-	}
-
-	public void delete() {
-		System.out.println("\n제품 삭제...");
-		int pnum;
-
-		try {
-
-			System.out.print("삭제할 제품번호?");
-			pnum = sc.nextInt();
-
-			int result = dao.deleteProduct(pnum);
-
-			if (result != 0)
-				System.out.println("제품삭제 성공....");
-		} catch (Exception e) {
-		}
-
-	}
+	// 제품수정 
+	 public void update() {
+	  System.out.println("\n 제품수정...");
+	  int pnum;
+	  ProductDTO dto = new ProductDTO();
+	  try {
+	   
+	   System.out.print(" 수정할 품목 번호? ");
+	   pnum=sc.nextInt();
+	   
+	   dto = dao.readProduct(pnum);
+	   
+	   if(dto==null) {
+	    System.out.println("등록된 아이디가 없습니다.\n");
+	    return;
+	   }
+	   
+	   System.out.print(dto.getPnum()+"\t");
+	   System.out.print(dto.getPname()+"\t");
+	   System.out.print(dto.getPrice()+"\t");
+	   System.out.print(dto.getStock()+"\n");
+	   
+	   
+	   System.out.print("품목 명? ");
+	   dto.setPname(sc.next());
+	   System.out.print("판매가 ? ");
+	   dto.setPrice(sc.nextInt());
+	   
+	   int result = dao.updateProduct(dto);
+	   System.out.println(result + "이 수정 완료 되었습니다.");    
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  }
+	  System.out.println();
+	 }
+	 
+	 public void delete() {
+	  System.out.println("\n제품 삭제...");
+	  int pnum;
+	  ProductDTO dto = new ProductDTO();
+	  
+	  try {
+	   
+	 
+	   System.out.print("삭제할 제품번호?");
+	   pnum=sc.nextInt();
+	   
+	   dto = dao.readProduct(pnum);
+	   
+	   if(dto==null) {
+	    System.out.println("등록된 제품이 없습니다.\n");
+	    return;
+	   }
+	   
+	   System.out.print(dto.getPnum()+"\t");
+	   System.out.print(dto.getPname()+"\t");
+	   System.out.print(dto.getPrice()+"\t");
+	   System.out.print(dto.getStock()+"\n");
+	   
+	   int result=dao.deleteProduct(pnum);
+	   
+	   if (result!=0)
+	    System.out.println("제품삭제 성공....");
+	  } catch (Exception e) {
+	  }
+	  
+	 }
 
 //입고	
 	public void input() {

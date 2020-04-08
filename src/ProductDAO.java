@@ -2,6 +2,7 @@
 import java.util.List;
 
 public interface ProductDAO {
+	public ProductDTO readProduct(int pnum); //力前八祸
 	public int insertProduct(ProductDTO dto);//力前眠啊
 	public int updateProduct(ProductDTO dto); //力前荐沥
 	public int deleteProduct(int pnum);//力前昏力
