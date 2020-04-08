@@ -7,6 +7,7 @@ import java.util.List;
 public class Customer {
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	CustomerDAO dao = new CustomerDAOImpl();
+	ProductDAO productDAO = new ProductDAOImpl();
 	CustomerDTO dto = null;
 
 	public void customer() {
@@ -15,7 +16,7 @@ public class Customer {
 			while (true) {
 				System.out.println("\n[고객]");
 				do {
-					System.out.print("1.마스크 구매 가능 여부 확인 2.구매 3.메인 => ");
+					System.out.print("1.코로나 마스크 구매 2.건강의약품 구매 3.메인 => ");
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
 
@@ -24,7 +25,7 @@ public class Customer {
 
 				switch (ch) {
 				case 1:
-					check();
+					purchaseMask();
 					break;
 				case 2:
 					purchase();
@@ -36,49 +37,73 @@ public class Customer {
 		}
 	}
 
-	private void check() {
-		System.out.println("\n마스크 구매 가능 여부 확인");
-		CustomerDTO dto = new CustomerDTO();
-		String name, rrn;
+	private void purchaseMask() {
+		System.out.println("\n마스크 구매할까?");
+		int ch;
+		int qty; // 요구 수량
+		int remain = 0; // 살 수 있는 마스크 개수
+		int result = 0;
+		List<Integer> pnums = null;
 
 		try {
-			System.out.print("이름 > ");
-			name = br.readLine();
-
-			System.out.print("주민번호 [- 입력] > ");
-			rrn = br.readLine();
-
-			if (rrn.length() != 14) {
-				System.out.println("유효하지않은 주민번호 입니다.");
-				return;
-			}
-			dto = dao.checkAvailability(rrn);
-			System.out.println(name + "님의 마스크 구매 가능한 날짜는");
-			System.out.println("★ " + dto.getRrn() + " ★입니다.");
-
-			String date = dto.getRrn();
-
-			if (date.equals(dao.checkDate())) {
-				System.out.println("오늘은 " + dao.checkDate() + "로 마스크 구매 가능합니다.");
-				System.out.println("구매하시겠습니까?");
-				int ch;
-				while (true) {
-					do {
-						System.out.print("1.네 2.아니오");
-						ch = Integer.parseInt(br.readLine());
-					} while (ch < 1 || ch > 2);
-					if (ch == 2) {
-						break;
-					}
+			if (dto == null) {
+				dto = identifyCustomer();
+			} else if (dto != null) {
+				System.out.print(dto.getcName() + "님이 맞습니까? 1.예 2.아니오 > ");
+				ch = Integer.parseInt(br.readLine());
+				if (ch == 2) {
+					dto = identifyCustomer();
 				}
 			}
+			String day = dao.checkAvailability(dto.getRrn());
+			System.out.println(dto.getcName() + "님의 마스크 구매 가능한 날짜는");
+			System.out.println("★ " + day + " ★입니다.");
+
+			String today = dao.checkDate();
+			if (!day.equals(today)) {
+				// 오늘 구매할 수 없으면...
+				return;
+			}
+
+			System.out.println("오늘은 " + today + "로 마스크 구매 가능합니다.");
+			System.out.print("구매하시겠습니까? 1.예 2.아니오 > ");
+			ch = Integer.parseInt(br.readLine());
+			if (ch == 2) {
+				return;
+			}
+
+			/////////////// 메서드 통합
+			remain = checkRemain();
+			if (remain > 0) {
+				System.out.println(dto.getcName() + "님은 이번주에 " + remain + "개까지 구매가 가능합니다.");
+			} else {
+				switch (remain) {
+				case -20011:
+					// 이미 위에서 조건 판별하였으므로 skip...
+//					System.out.println("오늘은 구매 대상이 아니십니다.");
+					return;
+				case -20021:
+					System.out.println("이미 이번주에 구매하셨으므로 구매가 불가능합니다.");
+					return;
+				}
+			}
+
+			System.out.println("몇 개 주문하실 건가요 (취소: 0)? ");
+			qty = Integer.parseInt(br.readLine());
+			if (qty == 0) {
+				System.out.println("마스크 구매를 취소합니다...");
+				return;
+			}
+			System.out.println(qty + "개 주문하셨죠? 잠시만요!");
+			pnums = dao.getMaskProductNumbers("마스크", true);
+			result = dao.insertSaleMask(dto, pnums.get((int) (Math.random() * pnums.size())), qty);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	///
-	public int checkPurchase() {// 구매여부 확인
+	public int checkRemain() {// 구매 개수
 		int qty = 0;
 		try {
 			if (dto == null) {
@@ -93,48 +118,30 @@ public class Customer {
 	}
 
 	public void purchase() {
-		int result = 0;
+		int result;
 		List<Integer> pnums = null;
 		try {
 			int ch, qty;
-			System.out.print("1.마스크 2.손소독제 > ");
+			// 상품 목록 출력
+			List<ProductDTO> list = productDAO.listProduct();
+			for (ProductDTO dto : list) {
+				if (!dto.getPname().contains("마스크")) {
+					System.out.println(dto);
+				}
+			}
+			System.out.println("구매할 상품번호 ? ");
 			ch = Integer.parseInt(br.readLine());
 			System.out.print("수량? ");
 			qty = Integer.parseInt(br.readLine());
-			switch (ch) {
-			case 1:
-				if (dto == null) {
-					dto = identifyCustomer();
-				} else if (dto != null) {
-					System.out.print(dto.getcName() + "님이 맞습니까? 1.예 2.아니오 > ");
-					ch = Integer.parseInt(br.readLine());
-					if (ch == 2) {
-						dto = identifyCustomer();
-					}
-				}
-				int remain = 0; // 살 수 있는 마스크 개수
-				remain = checkPurchase();
-				if (remain > 0) {
-					System.out.println(dto.getcName() + "님은 이번주에 " + remain + "개까지 구매가 가능합니다.");
-				} else {
-					switch (remain) {
-					case -20011:
-						System.out.println("오늘은 구매 대상이 아니십니다.");
-						break;
-					case -20021:
-						System.out.println("이미 이번주에 구매하셨으므로 구매가 불가능합니다.");
-						break;
-					}
-				}
-				System.out.println(qty + "개 주문하셨죠? 잠시만요!");
-				pnums = dao.getMaskProductNumbers("마스크", true);
-				result = dao.insertSale(dto, pnums.get((int) (Math.random() * pnums.size())), qty);
-				break;
-			case 2:
-				pnums = dao.getMaskProductNumbers("손소독제", true);
-				result = dao.insertSale(dto, pnums.get((int) (Math.random() * pnums.size())), qty);
-				break;
-			}
+//			switch (ch) {
+//			case 1:
+
+//				break;
+//			default:
+			pnums = dao.getMaskProductNumbers("손소독제", true);
+			result = dao.insertSaleItem(pnums.get((int) (Math.random() * pnums.size())), qty);
+//				break;
+//			}
 			if (result >= 1) {
 				System.out.println("{{{(>_<)}}} 구매가 완료되었습니다");
 			} else {

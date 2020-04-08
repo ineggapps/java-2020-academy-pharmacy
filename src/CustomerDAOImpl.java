@@ -178,8 +178,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 	}
 
 	/////////////
-	public CustomerDTO checkAvailability(String rrn) {
-		CustomerDTO dto = null;
+	public String checkAvailability(String rrn) {
+		String result = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -193,8 +193,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				dto = new CustomerDTO();
-				dto.setRrn(rs.getString("rrn"));
+				result = rs.getString("rrn");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -213,7 +212,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 			}
 		}
 
-		return dto;
+		return result;
 
 	}
 
