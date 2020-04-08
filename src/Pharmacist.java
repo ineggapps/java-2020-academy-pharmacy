@@ -74,17 +74,13 @@ public class Pharmacist {
 
 	public void inventory() {
 		int ch;
-
 		while (true) {
-
 			do {
-				System.out.println("1.입고등록 2.제품수정 3.제품삭제  4.리스트 5.종료=>");
+				System.out.println("1.제품추가 2.제품수정 3.제품삭제 4.입고등록 5.입고수정 6.입고삭제 7.리스트 8.종료=>");
 				ch = sc.nextInt();
-			} while (ch < 1 || ch > 5);
-
-			if (ch == 5)
+			} while (ch < 1 || ch > 8);
+			if (ch == 8)
 				break;
-
 			switch (ch) {
 			case 1:
 				insert();
@@ -96,16 +92,82 @@ public class Pharmacist {
 				delete();
 				break;
 			case 4:
+				input();
+				break;
+			case 5:
+				updateInput();
+				break;
+			case 6:
+				deleteInput();
+				break;
+			case 7:
 				sales();
 				break;
-
 			}
-
 		}
 	}
 
-//입고	
+	// 제품추가
 	public void insert() {
+		System.out.println("\n 제품추가...");
+		ProductDTO dto = new ProductDTO();
+		try {
+			System.out.print("품목 번호? ");
+			dto.setPnum(sc.nextInt());
+			System.out.print("품목 명? ");
+			dto.setPname(sc.next());
+			System.out.print("판매가 ? ");
+			dto.setPrice(sc.nextInt());
+
+			int result = dao.insertProduct(dto);
+			System.out.println(result + "이 등록이 완료 되었습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
+	}
+
+	// 제품수정
+	public void update() {
+		System.out.println("\n 제품수정...");
+		ProductDTO dto = new ProductDTO();
+		try {
+
+			System.out.print(" 수정할 품목 번호? ");
+			dto.setPnum(sc.nextInt());
+			System.out.print("품목 명? ");
+			dto.setPname(sc.next());
+			System.out.print("판매가 ? ");
+			dto.setPrice(sc.nextInt());
+
+			int result = dao.updateProduct(dto);
+			System.out.println(result + "이 수정 완료 되었습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
+	}
+
+	public void delete() {
+		System.out.println("\n제품 삭제...");
+		int pnum;
+
+		try {
+
+			System.out.print("삭제할 제품번호?");
+			pnum = sc.nextInt();
+
+			int result = dao.deleteProduct(pnum);
+
+			if (result != 0)
+				System.out.println("제품삭제 성공....");
+		} catch (Exception e) {
+		}
+
+	}
+
+//입고	
+	public void input() {
 		System.out.println("\n 입고 등록..."); // 마스크와 손소독제 입고 등록
 
 		InputDTO dto = new InputDTO();
@@ -118,7 +180,7 @@ public class Pharmacist {
 			System.out.println("개수 ? ");
 			dto.setIqty(sc.nextInt());
 
-			int result = dao.insertProduct(dto);
+			int result = dao.insertInput(dto);
 			if (result != 0)
 				;
 			System.out.println("입고번호 " + result + "이 등록이 완료 되었습니다.");
@@ -133,7 +195,7 @@ public class Pharmacist {
 	}
 
 	// 물품수정
-	public void update() {
+	public void updateInput() {
 		System.out.println("물품 수정 ... ");
 		List<InputListDTO> list = dao.listStock();
 		for (InputListDTO Ip : list) {
@@ -161,7 +223,7 @@ public class Pharmacist {
 				System.out.println("재고수량은 이전 수량보다 크게 입력해야 합니다.");
 				return;
 			}
-			int result = dao.updateProduct(dto);
+			int result = dao.updateInput(dto);
 			if (result != 0) {
 				System.out.println("수정 완료.");
 			} else {
@@ -173,7 +235,7 @@ public class Pharmacist {
 	}
 
 	// 제품삭제
-	public void delete() {
+	public void deleteInput() {
 		System.out.println("[ 물품 삭제 ]");
 		List<InputListDTO> list = dao.listStock();
 		for (InputListDTO Ip : list) {
@@ -185,7 +247,6 @@ public class Pharmacist {
 		}
 		int inum;
 		try {
-			InputDTO dto = new InputDTO();
 			System.out.print("삭제할 입고 번호?");
 			inum = sc.nextInt();
 			int result = dao.deleteProduct(inum);
@@ -237,7 +298,7 @@ public class Pharmacist {
 	public void customerlist() {
 		System.out.println("\n손님별 마스크 판매리스트...");
 		String rrn;
-		System.out.println("검색할 손님?");
+		System.out.println("검색할 손님? (주민등록번호) > ");
 		rrn = sc.next();
 		List<SaleSumDTO> list = dao.listCustomer(rrn);
 

@@ -16,7 +16,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 //涝绊(力前眠啊)
 	@Override
-	public int insertProduct(InputDTO dto) {
+	public int insertInput(InputDTO dto) {
 		int result = 0;
 		CallableStatement cstmt = null;
 		String sql;
@@ -45,7 +45,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 //力前荐沥
 	@Override
-	public int updateProduct(InputListDTO dto) {
+	public int updateInput(InputListDTO dto) {
 		CallableStatement cstmt = null;
 		int result = 0;
 		String sql;
@@ -72,7 +72,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 //力前昏力
 	@Override
-	public int deleteProduct(int inum) {
+	public int deleteInput(int inum) {
 		CallableStatement cstmt = null;
 		String sql;
 		int result = 0;
@@ -504,5 +504,88 @@ public class ProductDAOImpl implements ProductDAO {
 //				message.indexOf(ERROR_END));
 //		return message;
 //	}
+	
+	@Override
+	 public int insertProduct(ProductDTO dto) {
+	  int result = 0;
+	  PreparedStatement pstmt = null;
+	  String sql;
+	  
+	  try {
+	   sql = "INSERT INTO product VALUES(?,?,?,0)";
+	   pstmt = conn.prepareStatement(sql);
+	   
+	   pstmt.setInt(1, dto.getPnum());
+	   pstmt.setString(2, dto.getPname());
+	   pstmt.setInt(3, dto.getPrice());
+	   
+	   result=pstmt.executeUpdate();
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  } finally {
+	   if(pstmt!=null) {
+	    try {
+	     pstmt.close();
+	    } catch (Exception e2) {
+	    }
+	   }
+	  } 
+	  return result;
+	 }
+
+	@Override
+	 public int updateProduct(ProductDTO dto) {
+	  int result = 0;
+	  PreparedStatement pstmt = null;
+	  String sql;
+	  
+	  try {
+	   sql = "UPDATE product SET pname=?, price=? WHERE pnum=?";
+	   pstmt = conn.prepareStatement(sql);
+	   
+	   pstmt.setString(1, dto.getPname());
+	   pstmt.setInt(2, dto.getPrice());
+	   pstmt.setInt(3, dto.getPnum());
+	   
+	   result=pstmt.executeUpdate();
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  } finally {
+	   if(pstmt!=null) {
+	    try {
+	     pstmt.close();
+	    } catch (Exception e2) {
+	    }
+	   }
+	  } 
+	  return result;
+	 }
+	
+	 @Override
+	 public int deleteProduct(int pnum) {
+	  int result = 0;
+	  PreparedStatement pstmt = null;
+	  String sql;
+	  
+	  try {
+	   sql = "DELETE FROM product WHERE pnum=?";
+	   pstmt = conn.prepareStatement(sql);
+	   
+	   pstmt.setInt(1, pnum);
+	   
+	   result=pstmt.executeUpdate();
+	  } catch (Exception e) {
+	   e.printStackTrace();
+	  } finally {
+	   if(pstmt!=null) {
+	    try {
+	     pstmt.close();
+	    } catch (Exception e2) {
+	    }
+	   }
+	  } 
+	  return result;
+	 }
+
 
 }
