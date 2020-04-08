@@ -135,7 +135,7 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	// 재고리스트(남은재고안내)
-	@Override	
+	@Override
 	public List<InputListDTO> listStock() {
 		List<InputListDTO> list = new ArrayList<InputListDTO>();
 		PreparedStatement pstmt = null;
@@ -445,8 +445,7 @@ public class ProductDAOImpl implements ProductDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, pnum);
 			pstmt.setString(2, keyword);
-			pstmt.executeUpdate();
-			result = 1;
+			result = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -473,7 +472,7 @@ public class ProductDAOImpl implements ProductDAO {
 			sql = "SELECT pnum, pname, price, stock FROM product";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				ProductDTO dto = new ProductDTO();
 				dto.setPnum(rs.getInt("pnum"));
 				dto.setPname(rs.getString("pname"));
@@ -483,14 +482,14 @@ public class ProductDAOImpl implements ProductDAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			if(rs!=null) {
+		} finally {
+			if (rs != null) {
 				try {
 					rs.close();
 				} catch (Exception e2) {
 				}
 			}
-			if(pstmt!=null){
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
@@ -506,6 +505,4 @@ public class ProductDAOImpl implements ProductDAO {
 //		return message;
 //	}
 
-	
-	
 }

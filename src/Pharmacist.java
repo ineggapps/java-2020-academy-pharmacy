@@ -354,31 +354,67 @@ public class Pharmacist {
 				return;
 			}
 			System.out.println("등록된 증상 목록은 다음과 같습니다...");
+			while (true) {
+				System.out.print("키워드 번호 입력 (나가기: 0)> ");
+				ch = sc.nextInt();
+				if (ch == 0) {
+					break;
+				}
+				keyword = keywords.get(ch - 1);
+				list = dao.listByKeyword(keyword);
+				System.out.println(keyword + " 검색 결과 ..." + "(총 " + list.size() + "건)");
+				printSymtomObjects(list);
+			}
 			break;
 		case 2:// 증상 추가
 			System.out.println("기존에 등록된 증상 항목은 다음과 같습니다. ");
 			System.out.print("추가할 증상(주관식) ? ");
 			keyword = sc.next();
-			printProducts(dao.listProduct());
-			System.out.print("추가할 상품번호 ? ");
-			pnum = sc.nextInt();
-			result = dao.insertKeyword(pnum, keyword);
-			if (result != 0) {
-				System.out.println("증상이 정상적으로 등록되었습니다.");
-			} else {
-				System.out.println("이미 등록되었습니다만...?");
+			List<ProductDTO> target = dao.listProduct();
+			while (true) {
+				if (target == null || target.size() == 0) {
+					break;
+				}
+				printProducts(target);
+
+				System.out.print("추가할 상품번호 (나가기: 0)? ");
+				pnum = sc.nextInt();
+				if (pnum == 0) {
+					break;
+				}
+				result = dao.insertKeyword(pnum, keyword);
+				if (result != 0) {
+					for (int i = 0; i < target.size(); i++) {
+						if (target.get(i).getPnum() == pnum) {
+							target.remove(i);
+						}
+					}
+					System.out.println("증상이 정상적으로 등록되었습니다.");
+				} else {
+					System.out.println("이미 등록되었습니다만...?");
+				}
 			}
 			break;
 		case 3:// 증상 삭제
-			System.out.print("삭제할 증상? ");
+			System.out.print("삭제할 증상 (주관식) ? ");
 			keyword = sc.next();
-			list = dao.listByKeyword(keyword);
-			printSymtomObjects(list);
-			System.out.print("삭제할 상품번호 ? ");
-			pnum = sc.nextInt();
-			result = dao.deleteKeywordProduct(pnum, keyword);
-			if (result != 0) {
-				System.out.println("증상이 성공적으로 삭제되었습니다.");
+			while (true) {
+				list = dao.listByKeyword(keyword);
+				if (list == null || list.size() == 0) {
+					break;
+				}
+				printSymtomObjects(list);
+				System.out.print("삭제할 상품번호 (나가기: 0) ? ");
+				pnum = sc.nextInt();
+				if (pnum == 0) {
+					break;
+				}
+				result = dao.deleteKeywordProduct(pnum, keyword);
+				if (result != 0) {
+					System.out.println("증상이 성공적으로 삭제되었습니다.");
+				} else {
+					System.out.println("상품번호를 정확하게 입력해 주세요.");
+				}
 			}
 
 			break;
