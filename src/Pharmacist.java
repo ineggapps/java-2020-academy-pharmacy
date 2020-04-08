@@ -103,7 +103,7 @@ public class Pharmacist {
 				deleteInput();
 				break;
 			case 7:
-				sales();
+				liststock();
 				break;
 			}
 		}
