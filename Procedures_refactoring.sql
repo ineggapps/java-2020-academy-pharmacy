@@ -94,7 +94,7 @@ BEGIN
 END;
 /
 
-select * from sale;
+select * from sale join customer on customer.cnum = sale.cnum;
 select * from product;
 SELECT stock FROM product where pnum=2;
 

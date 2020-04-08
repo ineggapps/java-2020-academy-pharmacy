@@ -45,20 +45,16 @@ public class ProductDAOImpl implements ProductDAO {
 
 //제품수정
 	@Override
-	public int updateProduct(InputDTO dto) {
+	public int updateProduct(InputListDTO dto) {
 		CallableStatement cstmt = null;
 		int result = 0;
 		String sql;
-
 		try {
-			sql = "{CALL updateInput (?,?,?,?)}";
+			sql = "{CALL updateInput (?,?,?)}";
 			cstmt = conn.prepareCall(sql);
-
 			cstmt.setInt(1, dto.getInum());
-			cstmt.setInt(2, dto.getPnum());
-			cstmt.setString(3, dto.getIdate());
-			cstmt.setInt(4, dto.getIqty());
-
+			cstmt.setString(2, dto.getIdate());
+			cstmt.setInt(3, dto.getIqty());
 			cstmt.executeUpdate();
 			result = 1;
 		} catch (Exception e) {
@@ -71,7 +67,6 @@ public class ProductDAOImpl implements ProductDAO {
 				}
 			}
 		}
-
 		return result;
 	}
 
@@ -102,24 +97,64 @@ public class ProductDAOImpl implements ProductDAO {
 		return result;
 	}
 
-//재고리스트(남은재고안내)
-	@Override
-	public List<ProductDTO> listStock() {
-		List<ProductDTO> list = new ArrayList<ProductDTO>();
+	public InputDTO readInput(int inum) {
+		// 재고번호로 재고 정보 가져오기
+		InputDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "SELECT inum, pnum, idate, iqty FROM input WHERE inum = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, inum);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				dto = new InputDTO();
+				dto.setInum(rs.getInt("inum"));
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setIdate(rs.getString("idate"));
+				dto.setIqty(rs.getInt("iqty"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return dto;
+	}
+
+	// 재고리스트(남은재고안내)
+	@Override	
+	public List<InputListDTO> listStock() {
+		List<InputListDTO> list = new ArrayList<InputListDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
-
 		try {
-			sb.append("SELECT pnum, pname, stock, price FROM product");
-			sb.append(" ORDER BY pnum");
+			sb.append("SELECT inum, p.pnum, pname, stock, iqty,price");
+			sb.append(" FROM product p");
+			sb.append(" JOIN input i ON p.pnum = i.pnum");
+			sb.append(" ORDER BY p.pnum");
 			pstmt = conn.prepareStatement(sb.toString());
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				ProductDTO dto = new ProductDTO();
+				InputListDTO dto = new InputListDTO();
+				dto.setInum(rs.getInt("inum"));
 				dto.setPnum(rs.getInt("pnum"));
 				dto.setPname(rs.getString("pname"));
 				dto.setStock(rs.getInt("stock"));
+				dto.setIqty(rs.getInt("iqty"));
 				dto.setPrice(rs.getInt("price"));
 				list.add(dto);
 			}
@@ -133,11 +168,10 @@ public class ProductDAOImpl implements ProductDAO {
 				}
 			}
 		}
-
 		return list;
 	}
 
-//손님별 리스트
+	// 손님별 마스크 판매리스트
 	@Override
 	public List<SaleSumDTO> listCustomer(String rrn) {
 		List<SaleSumDTO> list = new ArrayList<>();
@@ -145,28 +179,24 @@ public class ProductDAOImpl implements ProductDAO {
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		try {
-			sb.append("SELECT cName,TO_CHAR(sDate,'yyyy-mm-dd')sDate,pName,SUM(sQty) sQty");
+			sb.append("SELECT p.pnum ,cName,TO_CHAR(sDate,'yyyy-mm-dd')sDate,pName,SUM(sQty) sQty");
 			sb.append(" FROM sale s");
 			sb.append(" JOIN product p ON s.pNum=p.pNum");
 			sb.append(" JOIN customer c ON s.cNum=c.cNum");
-			sb.append(" WHERE INSTR(rrn,?)>=1");
-			sb.append(" GROUP BY cName,TO_CHAR(sDate,'yyyy-mm-dd'),pName");
-
+			sb.append(" WHERE LENGTH(rrn)=14 AND p.pnum=?");
+			sb.append(" GROUP BY p.pnum ,cName, TO_CHAR(sDate,'yyyy-mm-dd'), pName");
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setString(1, rrn);
+			pstmt.setInt(1, 1);
 			rs = pstmt.executeQuery();
-
 			while (rs.next()) {
 				SaleSumDTO dto = new SaleSumDTO();
-
 				dto.setcName(rs.getString("cName"));
 				dto.setSdate(rs.getString("Sdate"));
 				dto.setpName(rs.getString("pName"));
 				dto.setsQty(rs.getInt("sQty"));
-
 				list.add(dto);
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -188,7 +218,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 //총 판매리스트
 	@Override
-	public List<SaleSumDTO> listProduct() {
+	public List<SaleSumDTO> listSumProduct() {
 		List<SaleSumDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -433,10 +463,49 @@ public class ProductDAOImpl implements ProductDAO {
 	private static final String ERROR_START = "ORA-";
 	private static final String ERROR_END = ": ";
 
+	@Override
+	public List<ProductDTO> listProduct() {
+		List<ProductDTO> list = new ArrayList<ProductDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "SELECT pnum, pname, price, stock FROM product";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPname(rs.getString("pname"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setStock(rs.getInt("stock"));
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null){
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
+
 //	private String parseException(String message) {
 //		message = message.substring(message.indexOf(ERROR_START) + ERROR_START.length() - 1,
 //				message.indexOf(ERROR_END));
 //		return message;
 //	}
 
+	
+	
 }

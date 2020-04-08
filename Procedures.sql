@@ -53,13 +53,15 @@ END;
 --입고수정
 CREATE OR REPLACE PROCEDURE updateInput(
     pInputNum input.inum%TYPE,
-    pProductNum input.pnum%TYPE,
+--    pProductNum input.pnum%TYPE,
     pDate input.idate%TYPE,
     pQTY input.iqty%TYPE
 )
 IS
+    pnum NUMBER;
 BEGIN
-    UPDATE input SET pnum=pProductNum, idate=pDate, iqty=pQty
+    SELECT pnum INTO pnum FROM input WHERE inum=pInputNum;
+    UPDATE input SET pnum=pnum, idate=pDate, iqty=pQty
     WHERE iNum=pInputNum;
     COMMIT;
 END;
@@ -320,12 +322,15 @@ insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '타이
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '노스카나겔', 25000, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '벤트락스겔', 25000, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '더마틱스울트라', 50000, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '가스활명수', 50000, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '광동 생록천', 50000, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '위청수', 50000, 0);
+
 select * from product;
 update product set pname='벤트락스겔' where pnum=14;
 commit;
 
 select * from product;
-select * from product_keyword;
 insert into product_keyword(pnum, keyword) values(2,'위생');
 insert into product_keyword(pnum, keyword) values(3,'두통');
 insert into product_keyword(pnum, keyword) values(4,'두통');
@@ -338,3 +343,17 @@ commit;
 select p.pnum, pname, price, stock from product p
 JOIN product_keyword k ON k.pnum = p.pnum
 WHERE keyword='두통';
+
+--증상 목록 (중복제거)
+select distinct keyword from product_keyword;
+--증상별 품목
+select keyword, p.pnum, pname, price, stock from product_keyword k 
+JOIN product p ON k.pnum = p.pnum
+GROUP BY keyword, (p.pnum, pname, price, stock)
+order by keyword, stock desc;
+select * from customer;
+select * from sale s full outer join customer c on c.cnum = s.cnum;
+
+select * from sale s 
+join customer c on s.cnum = c.cnum
+order by sdate desc;
