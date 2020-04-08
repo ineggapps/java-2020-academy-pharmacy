@@ -1,5 +1,6 @@
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -75,36 +76,40 @@ public class Pharmacist {
 
 	public void inventory() {
 		int ch;
-		while (true) {
-			do {
-				System.out.println("1.제품추가 2.제품수정 3.제품삭제 4.입고등록 5.입고수정 6.입고삭제 7.리스트 8.종료=>");
-				ch = sc.nextInt();
-			} while (ch < 1 || ch > 8);
-			if (ch == 8)
-				break;
-			switch (ch) {
-			case 1:
-				insert();
-				break;
-			case 2:
-				update();
-				break;
-			case 3:
-				delete();
-				break;
-			case 4:
-				input();
-				break;
-			case 5:
-				updateInput();
-				break;
-			case 6:
-				deleteInput();
-				break;
-			case 7:
-				liststock();
-				break;
+		try {
+			while (true) {
+				do {
+					System.out.println("1.제품추가 2.제품수정 3.제품삭제 4.입고등록 5.입고수정 6.입고삭제 7.리스트 8.종료=>");
+					ch = sc.nextInt();
+				} while (ch < 1 || ch > 8);
+				if (ch == 8)
+					break;
+				switch (ch) {
+				case 1:
+					insert();
+					break;
+				case 2:
+					update();
+					break;
+				case 3:
+					delete();
+					break;
+				case 4:
+					input();
+					break;
+				case 5:
+					updateInput();
+					break;
+				case 6:
+					deleteInput();
+					break;
+				case 7:
+					liststock();
+					break;
+				}
 			}
+		} catch (Exception e) {
+			System.out.println("올바르게 입력되지 않았습니다.");
 		}
 	}
 
@@ -215,7 +220,7 @@ public class Pharmacist {
 			pharmacistManage();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("올바르게 입력되지 않았습니다...");
 		}
 
 		System.out.println();
@@ -431,14 +436,17 @@ public class Pharmacist {
 		int choice, qty; // 선택번호, 수량
 		String keyword; // 검색어
 		List<ProductDTO> list = null;
+		List<String> keywords = null;
 		try {
-			System.out.print("\n 증상 입력 > ");
-			keyword = sc.next().trim();
-			if (keyword == null || keyword.length() == 0) {
-				System.out.println("키워드를 입력하세요...");
+			keywords = dao.getKeywords();
+			printSymtoms(keywords);// 증상 목록
+			System.out.print("\n 증상 번호 입력 (취소: 0) > ");
+			choice = sc.nextInt();
+			if (choice == 0) {
+				System.out.println("입력을 취소합니다.");
 				return;
 			}
-			list = dao.searchKeyword(keyword);
+			list = dao.searchKeyword(keywords.get(choice - 1));
 			if (list == null || list.size() == 0) {
 				System.out.println("검색 결과가 없습니다.");
 				return;
@@ -459,8 +467,10 @@ public class Pharmacist {
 			if (result != 0) {
 				System.out.println("처방되었습니다. ＜（＾－＾）＞");
 			}
+		} catch (InputMismatchException e) {
+			System.out.println("/_ \\ 올바르게 입력해 주세요... ");
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 	}
@@ -470,88 +480,91 @@ public class Pharmacist {
 		int result;
 		String keyword;
 		int pnum;
-		System.out.print("1.증상목록 2.증상추가 3.증상삭제 4.뒤로가기> ");
-		ch = sc.nextInt();
-		if (ch == 4) {
-			return;
-		} else if (ch < 1 || ch > 4) {
-			System.out.println("올바른 번호를 입력해 주세요...");
-			return;
-		}
-		List<String> keywords = dao.getKeywords();
-		List<ProductKeywordDTO> list = null;
-		printSymtoms(keywords);
-		switch (ch) {
-		case 1:// 증상 목록
-			if (keywords == null || keywords.size() == 0) {
-				System.out.println("등록된 증상 목록이 없습니다. 증상 추가를 이용하여 등록해 주세요...");
+		try {
+			System.out.print("1.증상목록 2.증상추가 3.증상삭제 4.뒤로가기> ");
+			ch = sc.nextInt();
+			if (ch == 4) {
+				return;
+			} else if (ch < 1 || ch > 4) {
+				System.out.println("올바른 번호를 입력해 주세요...");
 				return;
 			}
-			System.out.println("등록된 증상 목록은 다음과 같습니다...");
-			while (true) {
-				System.out.print("키워드 번호 입력 (나가기: 0)> ");
-				ch = sc.nextInt();
-				if (ch == 0) {
-					break;
+			List<String> keywords = dao.getKeywords();
+			List<ProductKeywordDTO> list = null;
+			printSymtoms(keywords);
+			switch (ch) {
+			case 1:// 증상 목록
+				if (keywords == null || keywords.size() == 0) {
+					System.out.println("등록된 증상 목록이 없습니다. 증상 추가를 이용하여 등록해 주세요...");
+					return;
 				}
-				keyword = keywords.get(ch - 1);
-				list = dao.listByKeyword(keyword);
-				System.out.println(keyword + " 검색 결과 ..." + "(총 " + list.size() + "건)");
-				printSymtomObjects(list);
-			}
-			break;
-		case 2:// 증상 추가
-			System.out.println("기존에 등록된 증상 항목은 다음과 같습니다. ");
-			System.out.print("추가할 증상(주관식) ? ");
-			keyword = sc.next();
-			List<ProductDTO> target = dao.listProduct();
-			while (true) {
-				if (target == null || target.size() == 0) {
-					break;
-				}
-				printProducts(target);
-
-				System.out.print("추가할 상품번호 (나가기: 0)? ");
-				pnum = sc.nextInt();
-				if (pnum == 0) {
-					break;
-				}
-				result = dao.insertKeyword(pnum, keyword);
-				if (result != 0) {
-					for (int i = 0; i < target.size(); i++) {
-						if (target.get(i).getPnum() == pnum) {
-							target.remove(i);
-						}
+				System.out.println("등록된 증상 목록은 다음과 같습니다...");
+				while (true) {
+					System.out.print("키워드 번호 입력 (나가기: 0)> ");
+					ch = sc.nextInt();
+					if (ch == 0) {
+						break;
 					}
-					System.out.println("증상이 정상적으로 등록되었습니다.");
-				} else {
-					System.out.println("이미 등록되었습니다만...?");
+					keyword = keywords.get(ch - 1);
+					list = dao.listByKeyword(keyword);
+					System.out.println(keyword + " 검색 결과 ..." + "(총 " + list.size() + "건)");
+					printSymtomObjects(list);
 				}
-			}
-			break;
-		case 3:// 증상 삭제
-			System.out.print("삭제할 증상 (주관식) ? ");
-			keyword = sc.next();
-			while (true) {
-				list = dao.listByKeyword(keyword);
-				if (list == null || list.size() == 0) {
-					break;
-				}
-				printSymtomObjects(list);
-				System.out.print("삭제할 상품번호 (나가기: 0) ? ");
-				pnum = sc.nextInt();
-				if (pnum == 0) {
-					break;
-				}
-				result = dao.deleteKeywordProduct(pnum, keyword);
-				if (result != 0) {
-					System.out.println("증상이 성공적으로 삭제되었습니다.");
-				} else {
-					System.out.println("상품번호를 정확하게 입력해 주세요.");
-				}
-			}
+				break;
+			case 2:// 증상 추가
+				System.out.println("기존에 등록된 증상 항목은 다음과 같습니다. ");
+				System.out.print("추가할 증상(주관식) ? ");
+				keyword = sc.next();
+				List<ProductDTO> target = dao.listProduct();
+				while (true) {
+					if (target == null || target.size() == 0) {
+						break;
+					}
+					printProducts(target);
 
-			break;
+					System.out.print("추가할 상품번호 (나가기: 0)? ");
+					pnum = sc.nextInt();
+					if (pnum == 0) {
+						break;
+					}
+					result = dao.insertKeyword(pnum, keyword);
+					if (result != 0) {
+						for (int i = 0; i < target.size(); i++) {
+							if (target.get(i).getPnum() == pnum) {
+								target.remove(i);
+							}
+						}
+						System.out.println("증상이 정상적으로 등록되었습니다.");
+					} else {
+						System.out.println("이미 등록되었습니다만...?");
+					}
+				}
+				break;
+			case 3:// 증상 삭제
+				System.out.print("삭제할 증상 (주관식) ? ");
+				keyword = sc.next();
+				while (true) {
+					list = dao.listByKeyword(keyword);
+					if (list == null || list.size() == 0) {
+						break;
+					}
+					printSymtomObjects(list);
+					System.out.print("삭제할 상품번호 (나가기: 0) ? ");
+					pnum = sc.nextInt();
+					if (pnum == 0) {
+						break;
+					}
+					result = dao.deleteKeywordProduct(pnum, keyword);
+					if (result != 0) {
+						System.out.println("증상이 성공적으로 삭제되었습니다.");
+					} else {
+						System.out.println("상품번호를 정확하게 입력해 주세요.");
+					}
+				}
+				break;
+			}
+		} catch (Exception e) {
+			System.out.println("올바르게 입력되지 않았습니다.\n" + e.getMessage());
 		}
 	}
 
