@@ -25,44 +25,50 @@ public class Pharmacist {
 
 	public void pharmacistManage() {
 		int ch;
-		while (true) {
-			System.out.println("\n 약사 [관리자 모드]");
-			String id;
-			String pwd;
-			if (!loggedIn) {
+		try {
+			while (true) {
+				System.out.println("\n 약사 [관리자 모드]");
+				String id;
+				String pwd;
+				if (!loggedIn) {
+					do {
+						System.out.println("BUT.... 로그인이 필요합니다.");
+						System.out.print("아이디:");
+						id = sc.next();
+						System.out.print("비밀번호:");
+						pwd = sc.next();
+						if (id.equals(administrator.get(KEY_ID)) && pwd.equals(administrator.get(KEY_PW))) {
+							System.out.println("관리자로 로그인하였습니다.");
+							loggedIn = true;
+						} else {
+							System.out.println("아이디나 비밀번호가 일치하지 않습니다.");
+							return;
+						}
+					} while (!loggedIn);// 로그인이 되지 않은 경우에 계속 순회
+				}
 				do {
-					System.out.println("BUT.... 로그인이 필요합니다.");
-					System.out.print("아이디:");
-					id = sc.next();
-					System.out.print("비밀번호:");
-					pwd = sc.next();
-					if (id.equals(administrator.get(KEY_ID)) && pwd.equals(administrator.get(KEY_PW))) {
-						System.out.println("관리자로 로그인하였습니다.");
-						loggedIn = true;
-					} else {
-						System.out.println("아이디나 비밀번호가 일치하지 않습니다.");
-					}
-				} while (!loggedIn);// 로그인이 되지 않은 경우에 계속 순회
+					System.out.print("1.재고관리  2. 판매현황  3.처방   4.로그아웃 =>");
+					ch = sc.nextInt();
+				} while (ch < 1 || ch > 4);
+				if (ch == 4) {
+					loggedIn = false;
+					break;
+				}
+				switch (ch) {
+				case 1:
+					inventory();
+					break;
+				case 2:
+					sales();
+					break;
+				case 3:
+					prescription();
+					break;
+				}
 			}
-			do {
-				System.out.print("1.재고관리  2. 판매현황  3.처방   4.로그아웃 =>");
-				ch = sc.nextInt();
-			} while (ch < 1 || ch > 4);
-			if (ch == 4) {
-				loggedIn = false;
-				break;
-			}
-			switch (ch) {
-			case 1:
-				inventory();
-				break;
-			case 2:
-				sales();
-				break;
-			case 3:
-				prescription();
-				break;
-			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
