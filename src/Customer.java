@@ -97,6 +97,11 @@ public class Customer {
 			System.out.println(qty + "개 주문하셨죠? 잠시만요!");
 			pnums = dao.getMaskProductNumbers("마스크", true);
 			result = dao.insertSaleMask(dto, pnums.get((int) (Math.random() * pnums.size())), qty);
+			if (result >= 1) {
+				System.out.println("{{{(>_<)}}} 구매가 완료되었습니다");
+			} else {
+				System.out.println("오류로 인해 구매에 실패하였습니다...");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -119,7 +124,7 @@ public class Customer {
 
 	public void purchase() {
 		int result;
-		List<Integer> pnums = null;
+		int pnum;
 		try {
 			int ch, qty;
 			// 상품 목록 출력
@@ -130,7 +135,7 @@ public class Customer {
 				}
 			}
 			System.out.println("구매할 상품번호 ? ");
-			ch = Integer.parseInt(br.readLine());
+			pnum = Integer.parseInt(br.readLine());
 			System.out.print("수량? ");
 			qty = Integer.parseInt(br.readLine());
 //			switch (ch) {
@@ -138,8 +143,7 @@ public class Customer {
 
 //				break;
 //			default:
-			pnums = dao.getMaskProductNumbers("손소독제", true);
-			result = dao.insertSaleItem(pnums.get((int) (Math.random() * pnums.size())), qty);
+			result = dao.insertSaleItem(pnum, qty);
 //				break;
 //			}
 			if (result >= 1) {
