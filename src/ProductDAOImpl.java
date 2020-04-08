@@ -392,7 +392,8 @@ public class ProductDAOImpl implements ProductDAO {
 			pstmt.setString(2, keyword);
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+//			System.out.println(parseException(e.getMessage()));
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -428,5 +429,14 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return result;
 	}
+
+	private static final String ERROR_START = "ORA-";
+	private static final String ERROR_END = ": ";
+
+//	private String parseException(String message) {
+//		message = message.substring(message.indexOf(ERROR_START) + ERROR_START.length() - 1,
+//				message.indexOf(ERROR_END));
+//		return message;
+//	}
 
 }
