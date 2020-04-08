@@ -73,7 +73,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 	}
 
 	@Override
-	public int insertSale(CustomerDTO dto, int pnum, int qty) {
+	public int insertSaleMask(CustomerDTO dto, int pnum, int qty) {
 		int result = 0;
 		CallableStatement cstmt = null;
 		String sql;
@@ -96,6 +96,30 @@ public class CustomerDAOImpl implements CustomerDAO {
 			System.out.println();
 			System.out.println(e.getMessage());
 //			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cstmt != null) {
+				try {
+					cstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public int insertSaleItem(int pnum, int qty) {
+		int result = 0;
+		CallableStatement cstmt = null;
+		String sql = "{CALL insertSaleItem(?, ?)}";
+		try {
+			cstmt = conn.prepareCall(sql);
+			cstmt.setInt(1, pnum);
+			cstmt.setInt(2, qty);
+			cstmt.executeUpdate();
+			result = 1;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
