@@ -15,8 +15,9 @@ public class Customer {
 		try {
 			while (true) {
 				System.out.println("\n[고객]");
+				System.out.println("◎  방문해주셔서 감사합니다.무엇이 필요하신가요? ◎");
 				do {
-					System.out.print("1.코로나 마스크 구매 2.일반 구매 3.약사's pick 4.메인 => ");
+					System.out.print("1.코로나 마스크 구매 | 2.일반 구매 | 3.약사's pick | 4.메인 => ");
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
 
@@ -41,7 +42,7 @@ public class Customer {
 	}
 
 	private void purchaseMask() {
-		System.out.println("\n마스크 구매할까?");
+		System.out.println("\n◎  마스크 구매를 도와드리겠습니다. ◎");
 		int ch;
 		int qty; // 요구 수량
 		int remain = 0; // 살 수 있는 마스크 개수
@@ -186,9 +187,9 @@ public class Customer {
 		CustomerDTO dto = null;
 		try {
 			String rrn, name;
-			System.out.print("이름 ? ");
+			System.out.print("성명 :  ");
 			name = br.readLine();
-			System.out.print("주민번호 ? ");
+			System.out.print("주민번호 : ");
 			// 회원정보가 등록돼 있는지 검색
 			rrn = br.readLine();
 			if (rrn == null || rrn.length() == 0) {
@@ -196,7 +197,7 @@ public class Customer {
 				System.out.println(rrn + " 자동입력");
 			}
 			if (!isValidRRN(rrn)) {
-				throw new Exception("주민등록번호 형식에 맞지 않습니다.");
+				throw new Exception("주민등록번호 형식에 맞지 않습니다 ㅠㅠ.");
 			}
 			// 주민등록번호에 하이픈이 없으면 중간에 하이픈 삽입
 			if (rrn.length() == 13 && isNumber(rrn)) {

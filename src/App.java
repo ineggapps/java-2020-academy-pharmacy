@@ -9,7 +9,8 @@ public class App {
 			int ch;
 			while (true) {
 				do {
-					System.out.print("1.사용자 2.약사 3.종료 > ");
+					System.out.println(">>> 쌍용 약국 <<<");
+					System.out.print("1.사용자 | 2.약사 | 3.종료 > ");
 					ch = sc.nextInt();
 				} while (ch < 1 || ch > 3);
 				if (ch == 3) {
@@ -27,7 +28,7 @@ public class App {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("종료되었습니다. 프로그램을 다시 실행하세요\n"+e.getMessage());
+			System.out.println("종료되었습니다. 프로그램을 다시 실행해주세요.\n"+e.getMessage());
 		} finally {
 			sc.close();
 		}
