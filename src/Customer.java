@@ -130,6 +130,7 @@ public class Customer {
 			int pnum, qty;
 			// 상품 목록 출력
 			List<ProductDTO> list = productDAO.listProduct();
+			System.out.println();
 			for (ProductDTO dto : list) {
 				if (!dto.getPname().contains("마스크")) {
 					System.out.println(dto);
@@ -152,7 +153,7 @@ public class Customer {
 			}
 			System.out.println();
 		} catch (NumberFormatException e) {
-			System.out.println("올바른 숫자를 입력하세요\n");
+			System.out.println("올바른 ※숫자※를 입력해주세요\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -240,9 +241,9 @@ public class Customer {
 		List<String> keywords = null;
 		try {
 			keywords = dao.getKeywords();
-			System.out.println("=========================");
+			System.out.println("=================================");
 			System.out.println("안녕하세요 환자님. /_\\ 어떻게 아프세요???");
-			System.out.println("=========================");
+			System.out.println("=================================");
 			printSymtoms(keywords);// 증상 목록
 			System.out.print("\n 증상 번호 입력 (취소: 0) > ");
 			choice = Integer.valueOf(br.readLine());
