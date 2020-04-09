@@ -118,8 +118,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 			cstmt = conn.prepareCall(sql);
 			cstmt.setInt(1, pnum);
 			cstmt.setInt(2, qty);
-			cstmt.executeUpdate();
-			result = 1;
+			result = cstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
