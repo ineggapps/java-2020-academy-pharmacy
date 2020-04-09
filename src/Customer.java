@@ -235,7 +235,6 @@ public class Customer {
 	public void prescribe() {
 		int result; // 쿼리 처리결과
 		int choice, qty; // 선택번호, 수량
-		String keyword; // 검색어
 		List<ProductDTO> list = null;
 		List<String> keywords = null;
 		try {
