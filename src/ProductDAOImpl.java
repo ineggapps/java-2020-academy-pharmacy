@@ -16,44 +16,44 @@ public class ProductDAOImpl implements ProductDAO {
 
 //제품번호로 조회	
 	@Override
-	 public ProductDTO readProduct(int pnum) {
-	  ProductDTO dto = null;
-	  PreparedStatement pstmt=null;
-	  ResultSet rs =null;
-	  String sql;
-	  
-	  sql="SELECT pnum, pname, price, stock  FROM product WHERE pnum = ?";
-	  
-	  try {
-	   pstmt=conn.prepareStatement(sql);
-	   pstmt.setInt(1, pnum);
-	   rs=pstmt.executeQuery();
-	   
-	   if(rs.next()) {
-	    dto =new ProductDTO();  
-	    dto.setPnum(rs.getInt("pnum"));
-	    dto.setPname(rs.getString("pname"));
-	    dto.setPrice(rs.getInt("price"));
-	    dto.setStock(rs.getInt("stock"));
-	   }
-	  } catch (Exception e) {
-	   e.printStackTrace();
-	  } finally {
-	   if(rs!=null) {
-	    try {
-	     rs.close();   
-	    } catch (Exception e2) {    
-	    }
-	   }
-	   if(pstmt!=null) {
-	    try {
-	     pstmt.close();
-	    } catch (Exception e2) {     
-	    }
-	   }
-	  }
-	  return dto;
-	 }
+	public ProductDTO readProduct(int pnum) {
+		ProductDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		sql = "SELECT pnum, pname, price, stock  FROM product WHERE pnum = ?";
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pnum);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPname(rs.getString("pname"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setStock(rs.getInt("stock"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return dto;
+	}
 
 //입고(제품추가)
 	@Override
@@ -342,7 +342,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public List<String> getKeywords() {
 		List<String> list = new ArrayList<String>();
@@ -511,88 +511,118 @@ public class ProductDAOImpl implements ProductDAO {
 //				message.indexOf(ERROR_END));
 //		return message;
 //	}
-	
-	@Override
-	 public int insertProduct(ProductDTO dto) {
-	  int result = 0;
-	  PreparedStatement pstmt = null;
-	  String sql;
-	  
-	  try {
-	   sql = "INSERT INTO product VALUES(?,?,?,0)";
-	   pstmt = conn.prepareStatement(sql);
-	   
-	   pstmt.setInt(1, dto.getPnum());
-	   pstmt.setString(2, dto.getPname());
-	   pstmt.setInt(3, dto.getPrice());
-	   
-	   result=pstmt.executeUpdate();
-	  } catch (Exception e) {
-	   e.printStackTrace();
-	  } finally {
-	   if(pstmt!=null) {
-	    try {
-	     pstmt.close();
-	    } catch (Exception e2) {
-	    }
-	   }
-	  } 
-	  return result;
-	 }
 
 	@Override
-	 public int updateProduct(ProductDTO dto) {
-	  int result = 0;
-	  PreparedStatement pstmt = null;
-	  String sql;
-	  
-	  try {
-	   sql = "UPDATE product SET pname=?, price=? WHERE pnum=?";
-	   pstmt = conn.prepareStatement(sql);
-	   
-	   pstmt.setString(1, dto.getPname());
-	   pstmt.setInt(2, dto.getPrice());
-	   pstmt.setInt(3, dto.getPnum());
-	   
-	   result=pstmt.executeUpdate();
-	  } catch (Exception e) {
-	   e.printStackTrace();
-	  } finally {
-	   if(pstmt!=null) {
-	    try {
-	     pstmt.close();
-	    } catch (Exception e2) {
-	    }
-	   }
-	  } 
-	  return result;
-	 }
-	
-	 @Override
-	 public int deleteProduct(int pnum) {
-	  int result = 0;
-	  PreparedStatement pstmt = null;
-	  String sql;
-	  
-	  try {
-	   sql = "DELETE FROM product WHERE pnum=?";
-	   pstmt = conn.prepareStatement(sql);
-	   
-	   pstmt.setInt(1, pnum);
-	   
-	   result=pstmt.executeUpdate();
-	  } catch (Exception e) {
-	   e.printStackTrace();
-	  } finally {
-	   if(pstmt!=null) {
-	    try {
-	     pstmt.close();
-	    } catch (Exception e2) {
-	    }
-	   }
-	  } 
-	  return result;
-	 }
+	public int insertProduct(ProductDTO dto) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
 
+		try {
+			sql = "INSERT INTO product VALUES(?,?,?,0)";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, dto.getPnum());
+			pstmt.setString(2, dto.getPname());
+			pstmt.setInt(3, dto.getPrice());
+
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public int updateProduct(ProductDTO dto) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "UPDATE product SET pname=?, price=? WHERE pnum=?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, dto.getPname());
+			pstmt.setInt(2, dto.getPrice());
+			pstmt.setInt(3, dto.getPnum());
+
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteProduct(int pnum) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "DELETE FROM product WHERE pnum=?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, pnum);
+
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public List<ProductDTO> searchAvailableProduct(String keyword) {
+		List<ProductDTO> list = new ArrayList<ProductDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select distinct p.pnum, pname, price, stock from product p join product_keyword k on k.pnum = p.pnum where keyword != ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPname(rs.getString("pname"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setStock(rs.getInt("stock"));
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
 
 }

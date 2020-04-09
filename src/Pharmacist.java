@@ -85,7 +85,7 @@ public class Pharmacist {
 					ch = sc.nextInt();
 				} while (ch < 1 || ch > 8);
 				if (ch == 8)
-					break;
+					return;
 				switch (ch) {
 				case 1:
 					insert();
@@ -307,6 +307,7 @@ public class Pharmacist {
 			System.out.print("입고번호:  " + dto.getInum() + "\t");
 			System.out.print("물품번호:  " + dto.getPnum() + "\t");
 			System.out.print("물품명:  " + dto.getPname() + "\t");
+			System.out.print("입고수량 : " + dto.getIqty() + "\t");
 			System.out.print("재고:  " + dto.getStock() + "\n");
 		}
 	}
@@ -407,7 +408,7 @@ public class Pharmacist {
 	}
 
 //처방
-	
+
 	public void managePrescription() {
 		int ch;
 		int result;
@@ -450,7 +451,7 @@ public class Pharmacist {
 				System.out.println("기존에 등록된 증상 항목은 다음과 같습니다. ");
 				System.out.print("추가할 증상(주관식) ? ");
 				keyword = sc.next();
-				List<ProductDTO> target = dao.listProduct();
+				List<ProductDTO> target = dao.searchAvailableProduct(keyword);
 				while (true) {
 					if (target == null || target.size() == 0) {
 						break;

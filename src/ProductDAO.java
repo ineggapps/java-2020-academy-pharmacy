@@ -24,6 +24,7 @@ public interface ProductDAO {
 	public List<ProductKeywordDTO> listByKeyword(String keyword); // 증상 목록들 출력
 	// 증상 추가
 	public int insertKeyword(int pnum, String keyword);
+	public List<ProductDTO> searchAvailableProduct(String keyword);
 	// 증상 삭제
 	public int deleteKeywordProduct(int pnum, String keyword);
 
