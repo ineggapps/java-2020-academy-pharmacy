@@ -361,7 +361,11 @@ GROUP BY keyword, (p.pnum, pname, price, stock)
 order by keyword, stock desc;
 select * from customer;
 select * from sale s full outer join customer c on c.cnum = s.cnum;
-
+select * from customer;
 select * from sale s 
 join customer c on s.cnum = c.cnum
 order by sdate desc;
+
+
+select p.pnum, pname, price, stock from product p join product_keyword k on k.pnum = p.pnum where keyword != '변비';
+select distinct p.pnum, pname, price, stock from product p join product_keyword k on k.pnum = p.pnum where keyword != '발열';
