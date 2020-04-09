@@ -51,14 +51,14 @@ public class Customer {
 			if (dto == null) {
 				dto = identifyCustomer();
 			} else if (dto != null) {
-				System.out.print(dto.getcName() + "님이 맞습니까? 1.예 2.아니오 > ");
+				System.out.print("\n"+dto.getcName() + "님이 맞습니까? 1.예 2.아니오 > ");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 2) {
 					dto = identifyCustomer();
 				}
 			}
 			String day = dao.checkAvailability(dto.getRrn());
-			System.out.println(dto.getcName() + "님의 마스크 구매 가능한 날짜는");
+			System.out.println("\n"+ dto.getcName() + "님의 마스크 구매 가능한 날짜는");
 			System.out.println("★ " + day + " ★입니다.");
 
 			String today = dao.checkDate();
@@ -67,7 +67,7 @@ public class Customer {
 				return;
 			}
 
-			System.out.println("오늘은 " + today + "로 마스크 구매 가능합니다.");
+			System.out.println("오늘은 " + today + "로 마스크 구매 ★가능★합니다.");
 			System.out.print("구매하시겠습니까? 1.예 2.아니오 > ");
 			ch = Integer.parseInt(br.readLine());
 			if (ch == 2) {
@@ -85,12 +85,13 @@ public class Customer {
 //					System.out.println("오늘은 구매 대상이 아니십니다.");
 					return;
 				case -20021:
-					System.out.println("이미 이번주에 구매하셨으므로 구매가 불가능합니다.");
+					System.out.println("\n이미 이번주에 구매하셨으므로 구매가 불가능합니다. /_\\");
+					System.out.println("다음주에 찾아주세요~");
 					return;
 				}
 			}
 
-			System.out.print("몇 개 주문하실 건가요 (취소: 0)? ");
+			System.out.print("몇 개 구매하실 건가요 [취소: 0]? ");
 			qty = Integer.parseInt(br.readLine());
 			if (qty == 0) {
 				System.out.println("마스크 구매를 취소합니다...");
@@ -113,7 +114,7 @@ public class Customer {
 		int qty = 0;
 		try {
 			if (dto == null) {
-				System.out.println("저희 약국에서 마스크를 구매하신 이력이 없으므로 구매가 가능합니다.");
+				System.out.println("저희 약국에서 마스크를 구매하신 이력이 없으므로 구매가 가능합니다.>ㅡ<");
 			}
 			// 회원등록이 된 경우 함수를 통하여 호출하자
 			qty = dao.checkPurchaseMask(dto);
@@ -216,7 +217,7 @@ public class Customer {
 				// 존재하지 않으면
 				dto = new CustomerDTO(-1, name, rrn);
 			}
-			System.out.println(name + "님 입장.");
+			System.out.println("*" + name + "님의 방문을 환영합니다 ^^ *");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -240,7 +241,7 @@ public class Customer {
 		try {
 			keywords = dao.getKeywords();
 			System.out.println("=========================");
-			System.out.println("안녕하세요 환자님. /_ \\ 어떻게 아프세요???");
+			System.out.println("안녕하세요 환자님. /_\\ 어떻게 아프세요???");
 			System.out.println("=========================");
 			printSymtoms(keywords);// 증상 목록
 			System.out.print("\n 증상 번호 입력 (취소: 0) > ");
