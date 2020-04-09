@@ -245,7 +245,7 @@ public class Customer {
 			System.out.println("안녕하세요 환자님. /_\\ 어떻게 아프세요???");
 			System.out.println("=================================");
 			printSymtoms(keywords);// 증상 목록
-			System.out.print("\n 증상 번호 입력 (취소: 0) > ");
+			System.out.print("\n 증상 번호 입력 [취소: 0] > ");
 			choice = Integer.valueOf(br.readLine());
 			if (choice == 0) {
 				System.out.println("입력을 취소합니다.");
@@ -253,17 +253,19 @@ public class Customer {
 			}
 			list = dao.searchKeyword(keywords.get(choice - 1));
 			if (list == null || list.size() == 0) {
-				System.out.println("검색 결과가 없습니다.");
+				System.out.println("검색 결과가 없습니다.ㅠㅠ");
 				return;
 			}
+			
+			System.out.println("\n목록 번호");
 			for (int i = 0; i < list.size(); i++) {
 				// 관련 상품 출력
-				System.out.println(i + 1 + "번. " + list.get(i).toString());
+				System.out.println(i + 1 + "번. " + "\t" +list.get(i).toString());
 			}
 			System.out.print("\n 처방할 약 목록 번호를 선택 > ");
 			choice = Integer.valueOf(br.readLine());
 			if (choice < 1 || choice > list.size()) {
-				System.out.println("올바른 번호를 입력하세요.");
+				System.out.println("올바른 ※목록※번호를 입력하세요.");
 				return;
 			}
 			System.out.print("수량 입력 ? ");
