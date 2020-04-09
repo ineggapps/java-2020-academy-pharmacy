@@ -98,6 +98,11 @@ public class Customer {
 			}
 			System.out.println(qty + "개 주문하셨죠? 잠시만요!");
 			result = dao.insertSaleMask(dto, 1, qty);
+			if (result >= 1) {
+				System.out.println("{{{(>_<)}}} 구매가 완료되었습니다");
+			} else {
+				System.out.println("오류로 인해 구매에 실패하였습니다...");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -131,7 +136,7 @@ public class Customer {
 			}
 			System.out.print("구매할 상품번호 (취소: 0)> ");
 			pnum = Integer.parseInt(br.readLine());
-			if(pnum==0) {
+			if (pnum == 0) {
 				return;
 			}
 			System.out.print("수량 > ");
