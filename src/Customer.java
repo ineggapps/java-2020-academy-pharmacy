@@ -130,7 +130,7 @@ public class Customer {
 					System.out.println(dto);
 				}
 			}
-			System.out.print("구매할 상품번호 (취소: 0)> ");
+			System.out.print("구매할 상품번호 [취소: 0]> ");
 			pnum = Integer.parseInt(br.readLine());
 			if(pnum==0) {
 				return;
