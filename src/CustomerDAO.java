@@ -9,7 +9,6 @@ public interface CustomerDAO {
 	public String checkAvailability(String rrn);
 	public CustomerDTO readCustomer(String rrn);
 	public String checkDate();
-	public List<Integer> getMaskProductNumbers(String keyword, boolean isAvailable);
 	
 	
 	// Ã³¹æ

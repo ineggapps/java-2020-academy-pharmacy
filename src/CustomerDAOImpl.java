@@ -256,43 +256,6 @@ public class CustomerDAOImpl implements CustomerDAO {
 	}
 
 	@Override
-	public List<Integer> getMaskProductNumbers(String keyword, boolean isAvailable) {
-		List<Integer> numbers = new ArrayList<Integer>();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		StringBuilder sql = new StringBuilder();
-		try {
-			sql.append("SELECT pnum FROM product WHERE INSTR(pname, ?) >= 1");
-			if (isAvailable) {
-				sql.append(" ");
-				sql.append("AND stock > 0");
-			}
-			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, keyword);
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				numbers.add(rs.getInt("pnum"));
-			}
-		} catch (Exception e) {
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (Exception e) {
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return numbers;
-	}
-
-	@Override
 	public List<String> getKeywords() {
 		List<String> list = new ArrayList<String>();
 		PreparedStatement pstmt = null;

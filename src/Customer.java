@@ -47,8 +47,6 @@ public class Customer {
 		int qty; // 요구 수량
 		int remain = 0; // 살 수 있는 마스크 개수
 		int result = 0;
-		List<Integer> pnums = null;
-
 		try {
 			if (dto == null) {
 				dto = identifyCustomer();
@@ -99,8 +97,7 @@ public class Customer {
 				return;
 			}
 			System.out.println(qty + "개 주문하셨죠? 잠시만요!");
-			pnums = dao.getMaskProductNumbers("마스크", true);
-			result = dao.insertSaleMask(dto, pnums.get((int) (Math.random() * pnums.size())), qty);
+			result = dao.insertSaleMask(dto, 1, qty);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
