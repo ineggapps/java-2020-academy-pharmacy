@@ -91,7 +91,7 @@ public class Customer {
 				}
 			}
 
-			System.out.println("몇 개 주문하실 건가요 (취소: 0)? ");
+			System.out.print("몇 개 주문하실 건가요 (취소: 0)? ");
 			qty = Integer.parseInt(br.readLine());
 			if (qty == 0) {
 				System.out.println("마스크 구매를 취소합니다...");
