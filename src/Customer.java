@@ -113,7 +113,7 @@ public class Customer {
 	public int checkRemain() {// 구매 개수
 		int qty = 0;
 		try {
-			if (dto == null) {
+			if (dto != null && dto.getcNum()<0) {
 				System.out.println("저희 약국에서 마스크를 구매하신 이력이 없으므로 구매가 가능합니다.>ㅡ<");
 			}
 			// 회원등록이 된 경우 함수를 통하여 호출하자
@@ -207,7 +207,7 @@ public class Customer {
 			}
 			// 주민등록번호에 하이픈이 없으면 중간에 하이픈 삽입
 			if (rrn.length() == 13 && isNumber(rrn)) {
-				rrn = rrn.substring(0, 7) + "-" + rrn.substring(6);
+				rrn = rrn.substring(0, 6) + "-" + rrn.substring(6);
 				System.out.println(rrn);
 			}
 			dto = dao.readCustomer(rrn);
