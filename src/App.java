@@ -27,7 +27,7 @@ public class App {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("종료되었습니다. 프로그램을 다시 실행하세요\n"+e.getMessage());
 		} finally {
 			sc.close();
 		}

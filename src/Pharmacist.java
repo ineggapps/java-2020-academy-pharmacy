@@ -49,7 +49,7 @@ public class Pharmacist {
 					} while (!loggedIn);// 로그인이 되지 않은 경우에 계속 순회
 				}
 				do {
-					System.out.print("1.재고관리  2. 판매현황  3.처방   4.로그아웃 =>");
+					System.out.print("1.제품관리  2. 판매현황  3.처방   4.로그아웃 =>");
 					ch = sc.nextInt();
 				} while (ch < 1 || ch > 4);
 				if (ch == 4) {
@@ -70,7 +70,9 @@ public class Pharmacist {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("비정상적으로 입력하셨습니다.");
+			sc.next();
 		}
 	}
 
@@ -195,6 +197,7 @@ public class Pharmacist {
 			if (result != 0)
 				System.out.println("제품삭제 성공....");
 		} catch (Exception e) {
+			System.out.println("제품 삭제에 실패했습니다.\n" + e.getMessage());
 		}
 
 	}
@@ -509,6 +512,8 @@ public class Pharmacist {
 					list = dao.listByKeyword(keyword);
 					System.out.println(keyword + " 검색 결과 ..." + "(총 " + list.size() + "건)");
 					printSymtomObjects(list);
+					System.out.println("============================");
+					printSymtoms(keywords);
 				}
 				break;
 			case 2:// 증상 추가
