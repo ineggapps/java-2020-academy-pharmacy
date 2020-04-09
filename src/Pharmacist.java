@@ -411,6 +411,7 @@ public class Pharmacist {
 		System.out.println("\n[품목별 전체 판매리스트]");
 		List<SaleSumDTO> list = dao.listSumProduct();
 		System.out.println("품목이름\t\t 품목번호\t\t재고수량\t\t판매날짜");
+		System.out.println("===========================================================");
 		for (SaleSumDTO dto : list) {
 			System.out.print(dto.getpName() + "\t\t");
 			System.out.print(dto.getpNum() + "\t\t");
