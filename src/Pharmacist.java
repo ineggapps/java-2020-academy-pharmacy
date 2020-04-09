@@ -130,7 +130,12 @@ public class Pharmacist {
 			dto.setPrice(sc.nextInt());
 
 			int result = dao.insertProduct(dto);
-			System.out.println(result + "이 등록이 완료 되었습니다.");
+			
+			if(result==1) {
+				System.out.println("제품 추가가 완료되었습니다.");				
+			}else {
+				System.out.println("제품 추가에 실패하였습니다.");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -165,7 +170,13 @@ public class Pharmacist {
 			dto.setPrice(sc.nextInt());
 
 			int result = dao.updateProduct(dto);
-			System.out.println(result + "이 수정 완료 되었습니다.");
+			
+			if(result==1) {
+				System.out.println("제품 수정이 완료되었습니다.");				
+			}else {
+				System.out.println("제품 수정에 실패하였습니다.");
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -215,7 +226,7 @@ public class Pharmacist {
 			dto.setPnum(sc.nextInt());
 			System.out.print("> 입고 날짜? ");
 			dto.setIdate(sc.next());
-			System.out.println("> 개수 ? ");
+			System.out.print("> 개수 ? ");
 			dto.setIqty(sc.nextInt());
 
 			int result = dao.insertInput(dto);
