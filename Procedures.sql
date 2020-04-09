@@ -249,9 +249,15 @@ SELECT SUBSTR((SELECT RRN FROM customer WHERE cnum=3),2,1) from dual; --고객 생�
 
 --마스크 5부제 (일~월)이 아니라 (월~ 다음주 일) 가져오기
 WITH TB AS (
-    SELECT TO_DATE('2020-04-06') TODAY  FROM dual
+    SELECT TO_DATE('2020-03-11') TODAY  FROM dual
+    UNION ALL
+    SELECT TO_DATE('2020-03-19') TODAY FROM dual
+    UNION ALL
+    SELECT TO_DATE('2020-03-24') TODAY FROM dual
+    UNION ALL
+    SELECT TO_DATE('2020-03-31') TODAY FROM dual
 )
-select NEXT_DAY(today-8,1)+1  START_DAY, NEXT_DAY(today-8,1)+7 END_DAY from tb; --주의 시작과 끝
+select TODAY 오늘, NEXT_DAY(today-8,1)+1 "주 시작일자", NEXT_DAY(today-8,1)+7 "주 마지막 일자" from tb; --주의 시작과 끝
 --마스크 5부제 해당 기간 동안 샀는지 가져오기
 select * from customer;
 SELECT nvl(sum(sQTY),0) sum from (
@@ -291,6 +297,9 @@ END;
 
 EXEC deleteSale(1);
 delete from sale;
+delete from input;
+delete from customer;
+delete from product;
 commit;
 select * from sale;
 select * from customer;
@@ -310,21 +319,20 @@ delete from input;
 delete from customer;
 rollback;
 commit;
-select * from tab;
+select * from input;
 
 desc product;
-insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '마스크 (KF94)', 1500, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '공적 마스크 (KF94)', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '손소독제', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '타이레놀', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '게보린', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '우루사', 3300, 0);
-insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '타이레놀', 1500, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '노스카나겔', 25000, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '벤트락스겔', 25000, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '더마틱스울트라', 50000, 0);
-insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '가스활명수', 50000, 0);
-insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '광동 생록천', 50000, 0);
-insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '위청수', 50000, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '가스활명수', 700, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '광동 생록천', 1300, 0);
+insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '위청수', 2000, 0);
 
 select * from product;
 update product set pname='벤트락스겔' where pnum=14;

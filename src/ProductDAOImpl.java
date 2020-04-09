@@ -342,41 +342,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		return list;
 	}
-
-	@Override
-	public int insertSale(int pnum, int qty) {
-		int result = 0;
-		CallableStatement cstmt = null;
-		String sql;
-		try {
-			sql = "{CALL insertSaleItem(?,?)}";// pnum, qty만 보내기
-			cstmt = conn.prepareCall(sql);
-			cstmt.setObject(1, pnum);
-			cstmt.setInt(2, qty);
-			cstmt.executeUpdate();
-			result = 1;
-		} catch (SQLException e) {
-			// 오라클 오류 메시지 파싱
-			String messages[] = e.getMessage().split(": ");
-			String errorType = messages[0];
-			String errorMessage = messages[1].split("[\\r\\n]+")[0];
-			System.out.println(errorType + ":" + errorMessage);
-			System.out.println();
-			System.out.println(e.getMessage());
-//			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (cstmt != null) {
-				try {
-					cstmt.close();
-				} catch (Exception e2) {
-				}
-			}
-		}
-		return result;
-	}
-
+	
 	@Override
 	public List<String> getKeywords() {
 		List<String> list = new ArrayList<String>();
@@ -510,7 +476,7 @@ public class ProductDAOImpl implements ProductDAO {
 		ResultSet rs = null;
 		String sql;
 		try {
-			sql = "SELECT pnum, pname, price, stock FROM product";
+			sql = "SELECT pnum, pname, price, stock FROM product ORDER BY pnum desc";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {

@@ -49,7 +49,7 @@ public class Pharmacist {
 					} while (!loggedIn);// 로그인이 되지 않은 경우에 계속 순회
 				}
 				do {
-					System.out.print("1.제품관리  2. 판매현황  3.처방   4.로그아웃 =>");
+					System.out.print("1.제품관리  2. 판매현황  3.증상관리   4.로그아웃 =>");
 					ch = sc.nextInt();
 				} while (ch < 1 || ch > 4);
 				if (ch == 4) {
@@ -64,7 +64,7 @@ public class Pharmacist {
 					sales();
 					break;
 				case 3:
-					prescription();
+					managePrescription();
 					break;
 				}
 			}
@@ -407,77 +407,7 @@ public class Pharmacist {
 	}
 
 //처방
-
-	public void prescription() {
-		int ch;
-		try {
-			while (true) {
-				do {
-					System.out.print("1.처방하기 2.처방관리 3.뒤로가기 > ");
-					ch = sc.nextInt();
-				} while (ch < 1 || ch > 3);
-				switch (ch) {
-				case 1:
-					prescribe();
-					break;
-				case 2:
-					managePrescription();
-					break;
-				}
-				if (ch == 3) {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void prescribe() {
-		int result; // 쿼리 처리결과
-		int choice, qty; // 선택번호, 수량
-		String keyword; // 검색어
-		List<ProductDTO> list = null;
-		List<String> keywords = null;
-		try {
-			keywords = dao.getKeywords();
-			printSymtoms(keywords);// 증상 목록
-			System.out.print("\n 증상 번호 입력 (취소: 0) > ");
-			choice = sc.nextInt();
-			if (choice == 0) {
-				System.out.println("입력을 취소합니다.");
-				return;
-			}
-			list = dao.searchKeyword(keywords.get(choice - 1));
-			if (list == null || list.size() == 0) {
-				System.out.println("검색 결과가 없습니다.");
-				return;
-			}
-			for (int i = 0; i < list.size(); i++) {
-				// 관련 상품 출력
-				System.out.println(i + 1 + "번. " + list.get(i).toString());
-			}
-			System.out.print("\n 처방할 약 목록 번호를 선택 > ");
-			choice = sc.nextInt();
-			if (choice < 1 || choice > list.size()) {
-				System.out.println("올바른 번호를 입력하세요.");
-				return;
-			}
-			System.out.print("수량 입력 ? ");
-			qty = sc.nextInt();
-			result = dao.insertSale(list.get(choice - 1).getPnum(), qty);
-			if (result != 0) {
-				System.out.println("처방되었습니다. ＜（＾－＾）＞");
-			}
-		} catch (InputMismatchException e) {
-			System.out.println("/_ \\ 올바르게 입력해 주세요... ");
-		} catch (Exception e) {
-//			e.printStackTrace();
-		}
-
-	}
-
+	
 	public void managePrescription() {
 		int ch;
 		int result;

@@ -18,7 +18,6 @@ public interface ProductDAO {
 
 	// 처방
 	public List<ProductDTO> searchKeyword(String keyword); // 처방검색
-	public int insertSale(int pnum, int qty);
 
 	// 증상 목록
 	public List<String> getKeywords(); // 증상 키워드만 출력 (중복제거)

@@ -16,11 +16,11 @@ public class Customer {
 			while (true) {
 				System.out.println("\n[고객]");
 				do {
-					System.out.print("1.코로나 마스크 구매 2.건강의약품 구매 3.메인 => ");
+					System.out.print("1.코로나 마스크 구매 2.일반 구매 3.약사's pick 4.메인 => ");
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
 
-				if (ch == 3)
+				if (ch == 4)
 					break;
 
 				switch (ch) {
@@ -29,6 +29,9 @@ public class Customer {
 					break;
 				case 2:
 					purchase();
+					break;
+				case 3:
+					prescribe();
 					break;
 				}
 			}
@@ -119,9 +122,8 @@ public class Customer {
 
 	public void purchase() {
 		int result;
-		List<Integer> pnums = null;
 		try {
-			int ch, qty;
+			int pnum, qty;
 			// 상품 목록 출력
 			List<ProductDTO> list = productDAO.listProduct();
 			for (ProductDTO dto : list) {
@@ -129,17 +131,14 @@ public class Customer {
 					System.out.println(dto);
 				}
 			}
-			System.out.println("구매할 상품번호 ? ");
-			ch = Integer.parseInt(br.readLine());
-			System.out.print("수량? ");
+			System.out.print("구매할 상품번호 (취소: 0)> ");
+			pnum = Integer.parseInt(br.readLine());
+			if(pnum==0) {
+				return;
+			}
+			System.out.print("수량 > ");
 			qty = Integer.parseInt(br.readLine());
-//			switch (ch) {
-//			case 1:
-
-//				break;
-//			default:
-			pnums = dao.getMaskProductNumbers("손소독제", true);
-			result = dao.insertSaleItem(pnums.get((int) (Math.random() * pnums.size())), qty);
+			result = dao.insertSaleItem(pnum, qty);
 //				break;
 //			}
 			if (result >= 1) {
@@ -228,5 +227,82 @@ public class Customer {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public void prescribe() {
+		int result; // 쿼리 처리결과
+		int choice, qty; // 선택번호, 수량
+		String keyword; // 검색어
+		List<ProductDTO> list = null;
+		List<String> keywords = null;
+		try {
+			keywords = dao.getKeywords();
+			System.out.println("=========================");
+			System.out.println("안녕하세요 환자님. /_ \\ 어떻게 아프세요???");
+			System.out.println("=========================");
+			printSymtoms(keywords);// 증상 목록
+			System.out.print("\n 증상 번호 입력 (취소: 0) > ");
+			choice = Integer.valueOf(br.readLine());
+			if (choice == 0) {
+				System.out.println("입력을 취소합니다.");
+				return;
+			}
+			list = dao.searchKeyword(keywords.get(choice - 1));
+			if (list == null || list.size() == 0) {
+				System.out.println("검색 결과가 없습니다.");
+				return;
+			}
+			for (int i = 0; i < list.size(); i++) {
+				// 관련 상품 출력
+				System.out.println(i + 1 + "번. " + list.get(i).toString());
+			}
+			System.out.print("\n 처방할 약 목록 번호를 선택 > ");
+			choice = Integer.valueOf(br.readLine());
+			if (choice < 1 || choice > list.size()) {
+				System.out.println("올바른 번호를 입력하세요.");
+				return;
+			}
+			System.out.print("수량 입력 ? ");
+			qty = Integer.valueOf(br.readLine());
+			result = dao.insertSaleItem(list.get(choice - 1).getPnum(), qty);
+			if (result != 0) {
+				System.out.println("처방되었습니다. ＜（＾－＾）＞");
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("/_ \\ 올바르게 입력해 주세요... ");
+		} catch (Exception e) {
+//			e.printStackTrace();
+		}
+
+	}
+
+	public void printSymtoms(List<String> keywords) {
+		if (keywords == null || keywords.size() == 0) {
+			return;
+		}
+		int index = 0;
+		for (String k : keywords) {
+			System.out.println(++index + ". " + k);
+		}
+	}
+
+	public void printSymtomObjects(List<ProductKeywordDTO> list) {
+		if (list == null || list.size() == 0) {
+			return;
+		}
+
+		for (ProductKeywordDTO dto : list) {
+			System.out.println(dto);
+		}
+	}
+
+	public void printProducts(List<ProductDTO> list) {
+		if (list == null || list.size() == 0) {
+			return;
+		}
+		for (ProductDTO dto : list) {
+			System.out.println(dto);
+		}
+
 	}
 }

@@ -292,4 +292,118 @@ public class CustomerDAOImpl implements CustomerDAO {
 		}
 		return numbers;
 	}
+
+	@Override
+	public List<String> getKeywords() {
+		List<String> list = new ArrayList<String>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "SELECT DISTINCT keyword from product_keyword";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(rs.getString("keyword"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<ProductDTO> searchKeyword(String keyword) {
+		PreparedStatement pstmt = null;
+		String sql;
+		ResultSet rs = null;
+		List<ProductDTO> list = new ArrayList<ProductDTO>();
+		try {
+			sql = "select p.pnum, pname, price, stock from product p" + " "
+					+ "JOIN product_keyword k ON k.pnum = p.pnum" + " " + "WHERE keyword=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductDTO dto = new ProductDTO();
+				dto.setPnum(rs.getInt("pnum"));
+				dto.setPname(rs.getString("pname"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setStock(rs.getInt("stock"));
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<ProductKeywordDTO> listByKeyword(String keyword) {
+		List<ProductKeywordDTO> list = new ArrayList<ProductKeywordDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "select keyword, p.pnum, pname, price, stock from product_keyword k" + " "
+					+ "JOIN product p ON k.pnum = p.pnum" + " " + "WHERE keyword=? ORDER BY keyword, stock desc";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ProductKeywordDTO dto = new ProductKeywordDTO();
+				dto.setKeyword(rs.getNString("keyword"));
+				ProductDTO product = new ProductDTO();
+				product.setPnum(rs.getInt("pnum"));
+				product.setPname(rs.getString("pname"));
+				product.setPrice(rs.getInt("price"));
+				product.setStock(rs.getInt("stock"));
+				dto.setProduct(product);
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
+
 }

@@ -9,7 +9,11 @@ public interface CustomerDAO {
 	public String checkAvailability(String rrn);
 	public CustomerDTO readCustomer(String rrn);
 	public String checkDate();
-	
-	////////
 	public List<Integer> getMaskProductNumbers(String keyword, boolean isAvailable);
+	
+	
+	// 처방
+	public List<ProductDTO> searchKeyword(String keyword); // 처방검색
+	public List<String> getKeywords(); // 증상 키워드만 출력 (중복제거)
+	public List<ProductKeywordDTO> listByKeyword(String keyword); // 증상 목록들 출력
 }
