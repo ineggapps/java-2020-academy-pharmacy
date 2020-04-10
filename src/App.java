@@ -9,7 +9,7 @@ public class App {
 			int ch;
 			while (true) {
 				do {
-					System.out.println(">>> 쌍용 약국 <<<");
+					System.out.println("\n>>> 쌍용 약국 <<<");
 					System.out.print("1.사용자 | 2.약사 | 3.종료 > ");
 					ch = sc.nextInt();
 				} while (ch < 1 || ch > 3);
