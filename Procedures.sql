@@ -16,7 +16,7 @@ CREATE OR REPLACE PROCEDURE insertInput(
 IS
 BEGIN
     INSERT INTO input(inum, pnum, idate, iqty)
-    VALUES (product_seq.NEXTVAL, pnum, pdate, pqty);
+    VALUES (input_seq.NEXTVAL, pnum, pdate, pqty);
     COMMIT;
     inum := product_seq.CURRVAL;
 END;
@@ -31,7 +31,7 @@ CREATE OR REPLACE PROCEDURE insertInputWithoutOut(
 IS
 BEGIN
     INSERT INTO input(inum, pnum, idate, iqty)
-    VALUES (product_seq.NEXTVAL, pnum, pdate, pqty);
+    VALUES (input_seq.NEXTVAL, pnum, pdate, pqty);
     COMMIT;
 END;
 /

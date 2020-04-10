@@ -33,7 +33,7 @@ CREATE TABLE product_keyword(
     keyword VARCHAR(30) NOT NULL,
     CONSTRAINT PK_PRODUCT_KEYWORD PRIMARY KEY (pnum, keyword) 
 );
-
+select * from product_keyword;
 -------------------------------------------------
 
 SELECT id, name, birth, tel
@@ -59,16 +59,20 @@ DBMS_JOB.SUBMIT
 (
 X -- 잡등록 ID
 ,'PHARMACY_INPUT_AUTOMATICALLY;' -- 실행할 프로시저명
-,SYSDATE --실행시킬 시간 지정
-,'SYSDATE+60/(1440)' --반복기간 지정
+,SYSDATE+(1/1440) --실행시킬 시간 지정
+,'SYSDATE+(10/(1440))' --반복기간 지정
 ,FALSE 
 );
 END;
 /
+select * from user_jobs;
+
+select * from product;
+select * from input;
 SELECT inum, TO_CHAR(idate, 'yyyy-mm-dd hh:mi:ss') idate, iqty FROM input order by inum desc;
 exec PHARMACY_INPUT_AUTOMATICALLY();
-select * from user_jobs;
-EXECUTE dbms_job.REMOVE(147);
+select job, schema_user, last_Sec, next_sec from user_jobs;
+EXECUTE dbms_job.REMOVE(288);
 commit;
 select * from product;
 
@@ -111,12 +115,14 @@ create sequence sale_seq
         nocache;
 
 create sequence input_seq
-        start with 1
+        start with 1000
         increment by 1
         nomaxvalue
         nocycle
         nocache;
-
+drop sequence customer_seq;
+drop sequence input_seq;
+drop sequence sale_seq;
 drop sequence product_seq;
 create sequence product_seq
         start with 1
@@ -125,7 +131,9 @@ create sequence product_seq
         nocycle
         nocache;
 --
-        
+
+select input_seq.CURRVAL from dual;
+
 --
 desc product;
 --이름    널?       유형           
@@ -152,3 +160,43 @@ desc input;
 --PNUM  NOT NULL NUMBER(8) 
 --IDATE NOT NULL DATE      
 --IQTY  NOT NULL NUMBER(8) 
+
+
+
+--누적삭제 되게끔
+
+ALTER TABLE input
+DROP CONSTRAINT FK_pnum;
+
+alter table sale drop constraint SYS_C008759;
+alter table sale drop constraint fk_pnum;
+
+alter table sale add constraint fk_sale_pnum
+foreign key (pnum) references product(pnum);
+
+alter table input add constraint fk_pnum 
+foreign key (pnum) references product(pnum)
+on delete cascade;
+
+select * from user_constraints;
+
+drop table sale;
+drop table input;
+drop table customer;
+
+alter table sale modify cnum null;
+commit;
+--출처: https://lbnl1027.tistory.com/entry/CASCADE-제약조건-추가 [Once in a Lifetime]
+select * from(
+select distinct p.pnum, pname, price, stock, keyword from product p left outer join product_keyword k on k.pnum = p.pnum
+order by p.pnum
+) where keyword is null or keyword !='만성피로';
+
+
+SELECT pnum, pname, price, stock from product
+MINUS
+select distinct p.pnum, pname, price, stock from product p left outer join product_keyword k on k.pnum = p.pnum
+where keyword='변비';
+
+select * from input;
+select pnum, pname, price, stock from (select distinct p.pnum, pname, price, stock, keyword from product p join product_keyword k on k.pnum = p.pnum ) WHERE nvl(keyword,' ') != '만성피로'; 

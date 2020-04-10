@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -51,14 +52,14 @@ public class Customer {
 			if (dto == null) {
 				dto = identifyCustomer();
 			} else if (dto != null) {
-				System.out.print("\n"+dto.getcName() + "님이 맞습니까? 1.예 2.아니오 > ");
+				System.out.print("\n" + dto.getcName() + "님이 맞습니까? 1.예 2.아니오 > ");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 2) {
 					dto = identifyCustomer();
 				}
 			}
 			String day = dao.checkAvailability(dto.getRrn());
-			System.out.println("\n"+ dto.getcName() + "님의 마스크 구매 가능한 날짜는");
+			System.out.println("\n" + dto.getcName() + "님의 마스크 구매 가능한 날짜는");
 			System.out.println("★ " + day + " ★입니다.");
 
 			String today = dao.checkDate();
@@ -113,9 +114,9 @@ public class Customer {
 	public int checkRemain() {// 구매 개수
 		int qty = 0;
 		try {
-			if (dto != null && dto.getcNum()<0) {
-				System.out.println("저희 약국에서 마스크를 구매하신 이력이 없으므로 구매가 가능합니다.>ㅡ<");
-			}
+//			if (dto != null && dto.getcNum() < 0) {
+//				System.out.println("저희 약국에서 마스크를 구매하신 이력이 없으므로 구매가 가능합니다.>ㅡ<");
+//			}
 			// 회원등록이 된 경우 함수를 통하여 호출하자
 			qty = dao.checkPurchaseMask(dto);
 		} catch (Exception e) {

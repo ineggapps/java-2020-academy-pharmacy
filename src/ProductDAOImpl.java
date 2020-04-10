@@ -124,9 +124,9 @@ public class ProductDAOImpl implements ProductDAO {
 			cstmt.setInt(1, inum);
 			cstmt.executeUpdate();
 			result = 1;
-
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println(e.toString());
 		} finally {
 			if (cstmt != null) {
 				try {
@@ -145,7 +145,7 @@ public class ProductDAOImpl implements ProductDAO {
 		ResultSet rs = null;
 		String sql;
 		try {
-			sql = "SELECT inum, pnum, idate, iqty FROM input WHERE inum = ?";
+			sql = "SELECT inum, pnum, idate, iqty FROM input WHERE inum = ? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, inum);
 			rs = pstmt.executeQuery();
@@ -186,7 +186,7 @@ public class ProductDAOImpl implements ProductDAO {
 			sb.append("SELECT inum, p.pnum, pname, stock, iqty,price");
 			sb.append(" FROM product p");
 			sb.append(" JOIN input i ON p.pnum = i.pnum");
-			sb.append(" ORDER BY p.pnum");
+			sb.append(" ORDER BY inum, p.pnum");
 			pstmt = conn.prepareStatement(sb.toString());
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -476,7 +476,7 @@ public class ProductDAOImpl implements ProductDAO {
 		ResultSet rs = null;
 		String sql;
 		try {
-			sql = "SELECT pnum, pname, price, stock FROM product ORDER BY pnum desc";
+			sql = "SELECT pnum, pname, price, stock FROM product ORDER BY pnum asc";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -519,12 +519,11 @@ public class ProductDAOImpl implements ProductDAO {
 		String sql;
 
 		try {
-			sql = "INSERT INTO product VALUES(?,?,?,0)";
+			sql = "INSERT INTO product VALUES(product_seq.NEXTVAL,?,?,0)";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, dto.getPnum());
-			pstmt.setString(2, dto.getPname());
-			pstmt.setInt(3, dto.getPrice());
+			pstmt.setString(1, dto.getPname());
+			pstmt.setInt(2, dto.getPrice());
 
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -579,10 +578,10 @@ public class ProductDAOImpl implements ProductDAO {
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, pnum);
-
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("제품 삭제에 실패했습니다.");
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -599,7 +598,13 @@ public class ProductDAOImpl implements ProductDAO {
 		List<ProductDTO> list = new ArrayList<ProductDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select distinct p.pnum, pname, price, stock from product p join product_keyword k on k.pnum = p.pnum where keyword != ?";
+//		String sql = "select * from ("
+//				+ "select distinct p.pnum, pname, price, stock, keyword from product p left outer join product_keyword k on k.pnum = p.pnum order by p.pnum"
+//				+ ") where keyword is null or keyword != ?";
+		String sql = "SELECT pnum, pname, price, stock from product " + "MINUS "
+				+ "select distinct p.pnum, pname, price, stock from product p left outer join product_keyword k on k.pnum = p.pnum "
+				+ "where keyword= ?";
+//		System.out.println(sql);
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, keyword);
@@ -613,6 +618,7 @@ public class ProductDAOImpl implements ProductDAO {
 				list.add(dto);
 			}
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			if (pstmt != null) {
