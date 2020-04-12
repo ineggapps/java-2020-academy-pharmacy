@@ -91,6 +91,10 @@ BEGIN
     COMMIT;
 END;
 /
+select * from input where inum=13;
+select * from input;
+delete from input where inum=1001;
+commit;
 
 CREATE OR REPLACE TRIGGER deleteTrigger_Input
 AFTER DELETE ON input
@@ -333,7 +337,7 @@ insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '더마
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '가스활명수', 700, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '광동 생록천', 1300, 0);
 insert into product(pnum, pname, price, stock) values(product_seq.NEXTVAL, '위청수', 2000, 0);
-
+commit;
 select * from product;
 update product set pname='벤트락스겔' where pnum=14;
 commit;

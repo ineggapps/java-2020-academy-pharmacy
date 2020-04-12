@@ -62,7 +62,7 @@ BEGIN
         ));
     --    raise_application_error(-20021,customerNum || ' 디버깅... ' || soldCount || '개 씩이나 구매하셨습니다..');
         DBMS_OUTPUT.PUT_LINE(start_day || ' ' || end_day || ' ' || soldCount);
-        IF soldCount+pQTY >= 2 THEN --이번주에 이미 구매한 수량이 2개 이상이면 살 수 없다 
+        IF soldCount+pQTY > 2 THEN --이번주에 이미 구매한 수량이 2개 이상이면 살 수 없다 
             raise_application_error(-20021,'주 최대 2매까지만 구매가 가능합니다. 당신은 욕심쟁이\(￣?￣*\))');
         END IF;
     END IF;  
@@ -72,6 +72,10 @@ BEGIN
     COMMIT;
 END;
 /
+
+select * from sale s join customer c on s.cnum = c.cnum;
+
+select * from sale;
 
 CREATE OR REPLACE PROCEDURE insertSaleItem(
     productNum sale.pnum%TYPE,
