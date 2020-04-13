@@ -22,7 +22,7 @@ BEGIN
 END;
 /
 
-
+--테스트용 프로시저
 CREATE OR REPLACE PROCEDURE insertInputWithoutOut(
     pNum input.pnum%TYPE,
     pDate input.idate%TYPE,
@@ -36,9 +36,6 @@ BEGIN
 END;
 /
 EXEC insertInputWithoutOut(4,'2020-04-06',55);
-
-select * from product;
-select  * from input;
 
 select * from all_triggers WHERE owner='PHARMACIST';
 CREATE OR REPLACE TRIGGER insertTrigger_Input
