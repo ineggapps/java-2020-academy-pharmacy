@@ -95,6 +95,20 @@ JAVA, ORACLE을 이용하여 데이터를 입출력하며 기본적으로 Back-e
 
 ## 5. DDL
 
+계정 생성
+
+```sql
+ALTER SESSION SET "_ORACLE_SCRIPT" = true;
+--약국 DB계정 생성
+CREATE USER pharmacist IDENTIFIED BY "java!@#$%"
+    DEFAULT TABLESPACE USERS
+    TEMPORARY TABLESPACE TEMP
+    QUOTA UNLIMITED ON USERS;
+--DB접근권한 부여 (프로시저 및 트리거까지)
+GRANT CONNECT, RESOURCE, CREATE TRIGGER,
+CREATE PROCEDURE TO pharmacist;
+```
+
 테이블 생성
 
 ```sql
