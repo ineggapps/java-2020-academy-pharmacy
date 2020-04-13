@@ -137,6 +137,13 @@ CREATE TABLE input (
 	,CONSTRAINT fk_pnum FOREIGN KEY(pNum) REFERENCES product(pNum) -- product table의 품목번호(pNum) 참조키
 );
 
+<고객님>
+CREATE TABLE customer(
+	cNum NUMBER PRIMARY KEY,
+	cName VARCHAR2(30) NOT NULL,
+	rrn VARCHAR2(14) UNIQUE NOT NULL
+);
+
 <판매내역>
 CREATE TABLE sale(
 	sNum NUMBER PRIMARY KEY,
@@ -148,12 +155,42 @@ CREATE TABLE sale(
 FOREIGN KEY(pNum) REFERENCES product(pNum)
 );
 
-<고객님>
-CREATE TABLE customer(
-	cNum NUMBER PRIMARY KEY,
-	cName VARCHAR2(30) NOT NULL,
-	rrn VARCHAR2(14) UNIQUE NOT NULL
-);
+
+--시퀀스
+create sequence customer_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nocycle
+        nocache;
+
+create sequence sale_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nocycle
+        nocache;
+
+create sequence input_seq
+        start with 1000
+        increment by 1
+        nomaxvalue
+        nocycle
+        nocache;
+create sequence product_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nocycle
+        nocache;
+
+--
+drop sequence customer_seq;
+drop sequence input_seq;
+drop sequence sale_seq;
+drop sequence product_seq;
+
+
 ```
 
 ## 6. 프로시저 및 트리거 등
@@ -410,21 +447,6 @@ END;
 
 
 --물품자동입고
-DECLARE
-X NUMBER;
-BEGIN
-DBMS_JOB.SUBMIT
-(
-X -- 잡등록 ID
-,'PHARMACY_INPUT_AUTOMATICALLY;' -- 실행할 프로시저명
-,SYSDATE+(1/1440) --실행시킬 시간 지정
-,'SYSDATE+(10/(1440))' --반복기간 지정
-,FALSE
-);
-END;
-/
-
-
 CREATE OR REPLACE PROCEDURE PHARMACY_INPUT_AUTOMATICALLY
 IS
 productNum NUMBER;
@@ -436,6 +458,20 @@ BEGIN
     ) WHERE ROWNUM = 1;
     insertInputWithoutOut(productNum, SYSDATE, DBMS_RANDOM.value(1,10));
     COMMIT;
+END;
+/
+
+DECLARE
+X NUMBER;
+BEGIN
+DBMS_JOB.SUBMIT
+(
+X -- 잡등록 ID
+,'PHARMACY_INPUT_AUTOMATICALLY;' -- 실행할 프로시저명
+,SYSDATE+(1/1440) --실행시킬 시간 지정
+,'SYSDATE+(10/(1440))' --반복기간 지정
+,FALSE
+);
 END;
 /
 
